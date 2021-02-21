@@ -11,6 +11,9 @@ import "channels"
 // Stimulus controllers
 import "controllers"
 
+var _ = require('lodash');
+
+
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()

@@ -5,6 +5,15 @@ export default class extends Controller {
 
   static values = { lat: Number, lng: Number }
 
+  initialize() {
+    if (navigator.geolocation) {
+      console.log('Geolocation is supported!');
+    }
+    else {
+      console.log('Geolocation is not supported for this Browser/OS.');
+    }
+  }
+
   getLocation() {
 
     console.log("location this.initialize")
@@ -14,7 +23,9 @@ export default class extends Controller {
       this.lngValue = position.coords.longitude;
       
       var times = SunCalc.getTimes(new Date(), this.latValue, this.lngValue);
-      this.getControllerByIdentifier('sun').initialize(times)
+      this.getControllerByIdentifier('sun').init(times)
+
+      console.log("Location Found: ", this.latValue + ", " + this.lngValue)
     })
 
   }
