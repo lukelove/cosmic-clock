@@ -1,0 +1,2 @@
+class AstroController < ApplicationController
+end
