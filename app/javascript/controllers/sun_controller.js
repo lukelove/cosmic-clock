@@ -1,30 +1,21 @@
 import { Controller } from 'stimulus'; 
-var SunCalc = require('suncalc');
-
-
+var dayjs = require('dayjs');
 export default class extends Controller {
 
 
-  initialize() {
+  initialize(times) {
     // var 
+    console.log( 'Sun times', times )
   }
   connect() {
-    var times = SunCalc.getTimes(new Date(), 51.5, -0.1);
-    console.log( 'times', times )
-
+    
   }
 
-  lat_lng() {
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      let lat = position.coords.latitude;
-      let long = position.coords.longitude;
-  
-      latText.innerText = lat.toFixed(2);
-      longText.innerText = long.toFixed(2);  
-    })
-
-
+  getControllerByIdentifier(identifier) {
+    return this.application.controllers.find(controller => {
+      return controller.context.identifier === identifier;
+    });
   }
+
 
 }

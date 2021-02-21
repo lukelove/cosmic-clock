@@ -1,4 +1,4 @@
-<div data-controller="location">
+<div data-controller="location" data-lat-value="" data-lng-value="">
   <div class="m-0 p-0 w-full">
     <div class="flex flex-row w-full">
       <div data-controller="sun" class="p-3 w-1/2">
@@ -11,8 +11,10 @@
           <p class="font-medium">
             13:34:40 - 14:36:20
           </p>
-          <button class="bg-blue-500 rounded shadow-md font-light pb-2 pl-4 pr-4 pt-2 text-center text-white w-40">
-            Let's do this!
+          <button
+            data-action="click->location#getLocation"
+            class="bg-blue-500 rounded shadow-md font-light pb-2 pl-4 pr-4 pt-2 text-center text-white w-40">
+            Get My Location
           </button>
         </div>
       </div>
