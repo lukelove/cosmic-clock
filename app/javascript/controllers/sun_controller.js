@@ -11,8 +11,6 @@ export default class extends Controller {
     this.getTattvas(times.sunrise)
   }
 
-
-
   getTattvas(sunrise) {
 
     var t = DateTime.fromISO(sunrise.toISOString())
@@ -42,12 +40,13 @@ export default class extends Controller {
     var thisInterval = this.interval()
     console.log('active Index:', thisInterval.index)
     var html = _.map(this.intervals, (i) => {
-      var klass = ( thisInterval == i ) ? 'bg-purple-300' : ''
+      var klass = ( thisInterval == i ) ? 'bg-purple-500' : ''
       var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
+      var el = this.getElement(i)
       
-      var h = '<div class="' + klass + ' grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
+      var h = '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
         h+= '<div>'+ i.string + '</div>'
-        h+= '<div>'+ this.getElement(i) + '</div>'
+        h+= '<div class="pl-12 ' + el + '">'+ _.capitalize(el) + '</div>'
       h+= "</div>"
       
       return h
@@ -63,20 +62,25 @@ export default class extends Controller {
   getElement(interval) {
     switch (interval.elIndex) {
       case 0:
-        return 'Spirit'
+        return 'spirit'
       case 1:
-        return 'Air'
+        return 'air'
       case 2:
-        return 'Fire'
+        return 'fire'
       case 3:
-        return 'Earth'
+        return 'earth'
       case 4:
-        return 'Water'
+        return 'water'
     }
   }
 
   interval() {
-    return _.find(this.intervals, (i) => { return i.interval.contains( DateTime.now() ) })
+    var i = _.find(this.intervals, (i) => { return i.interval.contains( DateTime.now() ) })
+    if(i == undefined){
+      alert('uh oh.  did not find this interval!')
+      console.log("error now()", DateTime.now(), this.intervals())
+    }
+    return i
   }
 
   getControllerByIdentifier(identifier) {

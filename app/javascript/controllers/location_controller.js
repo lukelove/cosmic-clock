@@ -1,5 +1,6 @@
 import { Controller } from 'stimulus';
 var SunCalc = require('suncalc');
+import { DateTime } from "luxon";
 
 export default class extends Controller {
 
@@ -23,6 +24,22 @@ export default class extends Controller {
       this.lngValue = position.coords.longitude;
       
       var times = SunCalc.getTimes(new Date(), this.latValue, this.lngValue);
+
+      // console.log("DDDD", DateTime.fromObject({hour: 0}))
+      // if now() is after midnight and before sunrise, give me yesterdays times
+      // console.log("DDDD", DateTime.now() > DateTime.fromObject({hour: 0}) )
+      // DateTime.now() > DateTime.fromObject({hour: 0})
+      // if now() is after midnight and before sunrise, give me yesterdays times
+
+      var sunrise = DateTime.fromISO(times.sunrise.toISOString())
+
+      if( DateTime.now() < sunrise ){
+        console.log("using Yesterday's Sunrise")
+        var d = new Date();
+        d.setDate(d.getDate() - 1);
+        times = SunCalc.getTimes(d, this.latValue, this.lngValue);
+      }
+
       this.getControllerByIdentifier('sun').init(times)
 
       console.log("Location Found: ", this.latValue + ", " + this.lngValue)

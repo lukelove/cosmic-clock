@@ -1,3 +1,37 @@
 // Place all the styles related to the astro controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+$symbol-width: 25px;
+$symbol-height: 25px;
+
+.air {
+  background-image: asset-url("alchemical/air.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.water {
+  background-image: asset-url("alchemical/water.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.fire {
+  background-image: asset-url("alchemical/fire.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.earth {
+  background-image: asset-url("alchemical/earth.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.spirit {
+  background-image: asset-url("alchemical/spirit.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
