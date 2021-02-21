@@ -42,19 +42,21 @@ export default class extends Controller {
     var thisInterval = this.interval()
     console.log('active Index:', thisInterval.index)
     var html = _.map(this.intervals, (i) => {
-      var klass = ( thisInterval == i ) ? 'bg-green-200' : ''
+      var klass = ( thisInterval == i ) ? 'bg-purple-300' : ''
       var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
       
-      var h = '<div class="grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
-        h+= '<div class="' + klass + '">'+ i.string + '</div>'
-        h+= '<div class="' + klass + '">'+ this.getElement(i) + '</div>'
+      var h = '<div class="' + klass + ' grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
+        h+= '<div>'+ i.string + '</div>'
+        h+= '<div>'+ this.getElement(i) + '</div>'
       h+= "</div>"
       
       return h
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
-    document.querySelector('#sun-i-' + thisInterval.index).focus()
+    var activeEl = document.querySelector('#sun-i-' + thisInterval.index)
+    activeEl.focus()
+    _.delay((el) => { el.blur() },100, activeEl)
   }
 
 
