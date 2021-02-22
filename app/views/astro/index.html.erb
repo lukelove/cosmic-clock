@@ -36,9 +36,13 @@
         <div
           class="flex items-center bg-gray-500 bg-right border-transparent rounded-3xl flex-col justify-center mb-0 ml-auto mr-auto mt-0 max-w-5xl pb-48 pl-24 pr-24 pt-48 space-y-4 w-full"
         >
+          <%= render(partial: 'timer', locals: {controller: 'moon'}) %>
           <h1 class="font-sans text-3xl font-semibold tracking-tight">
             Moon Time
           </h1>
+          <p class="font-medium overflow-y-auto h-32 w-full" data-moon-target="timeNowStr">
+            ... nothing ... 
+          </p>
           <div class="font-medium w-full">
             <div class="grid grid-cols-4 gap-1">
               <span>Day Length: </span>
@@ -54,9 +58,6 @@
             </div>
           </div>
 
-          <p class="font-medium overflow-y-auto h-32 w-full" data-moon-target="timeNowStr">
-            ... nothing ... 
-          </p>
         </div>
       </div>
     </div>

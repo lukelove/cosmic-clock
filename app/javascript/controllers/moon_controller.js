@@ -1,10 +1,11 @@
 import { Controller } from 'stimulus'; 
-import { DateTime, Duration } from "luxon";
-import Interval from "luxon/src/interval.js";
+import { DateTime, Duration, Interval } from "luxon";
+var Countdown = require('countdown.js');
+import CanvasCircularCountdown from 'canvas-circular-countdown';
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength" ]
+  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", "timer" ]
 
   init(sunrise, sunset) {
     var wholeDayMs = 86400000
@@ -21,8 +22,41 @@ export default class extends Controller {
     var dayIntervals = this.makeInterval(0, sunrise, this.offset(sunrise), dayIntervalLength)
     var nightIntervals = this.makeInterval(12, sunset, _.last(dayIntervals).elIndex + 1, nightIntervalLength) 
     this.intervals = _.concat( dayIntervals, nightIntervals )
-    this.toHtml()
+    
+    this.refreshHTML()
   }
+
+  refreshHTML(){
+    this.toHtml()
+    this.wait()
+  }
+
+  wait(){
+
+    var that = this
+    var nextInterval = _.find(this.intervals, (i) => { return (i.index == this.activeInterval.index + 1) })
+    var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
+
+    // timer & countdown
+    new CanvasCircularCountdown(this.timerTarget, {
+      "duration": secToNextInterval * 1000,
+      "radius": 150,
+      "progressBarWidth": 15,
+      "circleBackgroundColor": "#ffffff",
+      "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
+      "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
+      "showCaption": true,
+      // "captionColor": "#343a40",
+      "captionFont": "60px sans-serif",
+      "captionText": (percentage, time, instance) => {
+        return Duration.fromMillis(time.remaining).toFormat('mm:ss')
+      },
+    }, function onTimerRunning(percentage, time, instance) {
+      // Do your stuff here while timer is running...
+    }).start()
+
+    var countdown = new Countdown(secToNextInterval, function(seconds) {}, function() { that.refreshHTML() });
+  }  
 
   makeInterval(indexOffset, time, elCount, intervalLength) {
     var owner = (indexOffset == 0) ? 'sun' : 'moon'
@@ -49,10 +83,10 @@ export default class extends Controller {
 
     var controller = this.getControllerByIdentifier('location')
 
-    var thisInterval = this.interval()
+    this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
-      var klass = ( thisInterval == i ) ? 'bg-yellow-300' : ''
-      var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
+      var klass = ( this.activeInterval == i ) ? 'bg-yellow-300' : ''
+      var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
       var el = this.getElement(i)
       
       var h = '<div class="' + klass + ' p-2 grid grid-cols-4" '+ tabIndex + ' id="moon-i-' + i.id + '">'
@@ -66,14 +100,18 @@ export default class extends Controller {
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
-    var activeEl = document.querySelector('#moon-i-' + thisInterval.id)
+    this.focus()
+        
+  }
+
+  focus() {
+    var activeEl = document.querySelector('#moon-i-' + this.activeInterval.id)
 
     _.delay((e) => {
       e.focus()
       _.delay((el) => { el.blur() },100, e)
     }, 200, activeEl)
-    
-    
+
   }
 
   offset(sunrise){

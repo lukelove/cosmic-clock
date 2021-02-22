@@ -1,7 +1,5 @@
 import { Controller } from 'stimulus'; 
-import { DateTime } from "luxon";
-import Interval from "luxon/src/interval.js";
-import Duration from "luxon/src/duration.js";
+import { DateTime, Duration, Interval } from "luxon";
 var Countdown = require('countdown.js');
 import CanvasCircularCountdown from 'canvas-circular-countdown';
 
@@ -41,7 +39,6 @@ export default class extends Controller {
     var that = this
     var nextInterval = _.find(this.intervals, (i) => { return (i.index == this.activeInterval.index + 1) })
     var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
-    
 
     // timer & countdown
     new CanvasCircularCountdown(this.timerTarget, {
@@ -61,19 +58,7 @@ export default class extends Controller {
       // Do your stuff here while timer is running...
     }).start()
 
-
-    var countdown = new Countdown(secToNextInterval, function(seconds) {
-
-      // var timeLeft = seconds
-      // console.log('timeLeft', timeLeft); //log the number of seconds that have passed
-      // that.timerRemainingTarget.innerHTML = Duration.fromMillis(timeLeft * 1000).toFormat('m:ss')  
-    }, function() {
-       console.log("Countdown complete!") //log that the countdown has complete
-       that.refreshHTML()
-       console.log('countdown refresh complete')
-    });
-
-    
+    var countdown = new Countdown(secToNextInterval, function(seconds) {}, function() { that.refreshHTML() });
   }
 
   toHtml(){
