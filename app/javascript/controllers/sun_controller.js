@@ -6,14 +6,10 @@ export default class extends Controller {
 
   static targets = [ "timeNowStr" ]
 
-  init(times) {
-    console.log( 'Sunrise', times.sunrise )
-    this.getTattvas(times.sunrise)
-  }
+  init(sunrise) {
+    console.log( 'Sunrise', sunrise )
 
-  getTattvas(sunrise) {
-
-    var t = DateTime.fromISO(sunrise.toISOString())
+    var t = sunrise
 
     var elCount = 0
 

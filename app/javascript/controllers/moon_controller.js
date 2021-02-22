@@ -10,16 +10,8 @@ export default class extends Controller {
     // alert("hello from Moon StimulusJS")
   }
 
-  init(times) {
-    console.log('moon', times)
-    this.setIntervals(times)
-  }
-
-  setIntervals(times) {
-
-    var sunrise = DateTime.fromISO(times.sunrise.toISOString())
-    var sunset = DateTime.fromISO(times.sunset.toISOString())
-
+  init(sunrise, sunset) {
+    console.log('moon', sunrise, sunset)
     console.log('diff MS', sunrise.diff(sunset).milliseconds)
 
     var wholeDayMs = 86400000
@@ -44,7 +36,6 @@ export default class extends Controller {
 
     return _.map(_.times(12), (n) => {
       var i = Interval.fromDateTimes(t, ( t = t.plus({millisecond: intervalLength}) ))
-      // console.log('i!', i)
 
       var realIndex = n+1 + ( (indexOffset == 0) ? 0 : 12 )
       var data = {

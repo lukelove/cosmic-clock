@@ -17,7 +17,15 @@ export default class extends Controller {
   }
 
   go(sunrise, sunset) {
-    
+    console.log('GO!', sunrise, sunset)
+    this.getControllerByIdentifier('sun').init(sunrise)
+    this.getControllerByIdentifier('moon').init(sunrise, sunset)
+
+    // var sunrise = DateTime.fromISO(times.sunrise.toISOString())
+    // var sunset = DateTime.fromISO(times.sunset.toISOString())
+
+    this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
+    this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
   }
 
   getLocation() {
@@ -28,38 +36,30 @@ export default class extends Controller {
       this.latValue = position.coords.latitude;
       this.lngValue = position.coords.longitude;
 
-      fetch( ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', DateTime.now().toISODate(),'&formatted=0'].join('') )
-        .then(response => response.json())
-        .then((data) => {
-          // console.log('fetch', data)
-          // console.log('fetch sunset', data.results.sunset)
-          // console.log('fetch sunrise', data.results.sunrise)
-
-          // console.log( "fetch ISO ", DateTime.fromISO(data.results.sunrise) )
-
-          this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) )
-        })
-      
-
-      if( DateTime.now() < sunrise ){
-        console.log("using Yesterday's Sunrise")
-        var d = new Date();
-        d.setDate(d.getDate() - 1);
-        times = SunCalc.getTimes(d, this.latValue, this.lngValue);
-      }
-
-      this.getControllerByIdentifier('sun').init(times)
-      this.getControllerByIdentifier('moon').init(times)
-
-      var sunrise = DateTime.fromISO(times.sunrise.toISOString())
-      var sunset = DateTime.fromISO(times.sunset.toISOString())
-
-      this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
-      this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
-
-      // console.log("Location Found: ", this.latValue + ", " + this.lngValue)
+      var today = this.today()
+      var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
+      fetch( url ).then(response => response.json()) .then((data) => { this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) })
     })
 
+  }
+
+  today(){
+ 
+    // if now is after sunrise, use today
+    // if now is before sunrise, use yesterday
+
+    var times = SunCalc.getTimes(new Date(), this.latValue, this.lngValue);
+    var sunrise = DateTime.fromISO(times.sunrise.toISOString())
+
+    if( DateTime.now() < sunrise ){
+      console.log("using Yesterday's Sunrise")
+      var d = new Date();
+      d.setDate(d.getDate() - 1);
+      times = SunCalc.getTimes(d, this.latValue, this.lngValue);
+      sunrise = DateTime.fromISO(times.sunrise.toISOString())
+    }
+
+    return sunrise
   }
 
   connect() {
