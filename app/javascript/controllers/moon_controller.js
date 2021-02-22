@@ -6,14 +6,7 @@ export default class extends Controller {
 
   static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength" ]
 
-  connect() {
-    // alert("hello from Moon StimulusJS")
-  }
-
   init(sunrise, sunset) {
-    console.log('moon', sunrise, sunset)
-    console.log('diff MS', sunrise.diff(sunset).milliseconds)
-
     var wholeDayMs = 86400000
     var dayMS = sunrise.diff(sunset).milliseconds * -1
     var nightMS = wholeDayMs - dayMS
@@ -54,7 +47,6 @@ export default class extends Controller {
 
   toHtml(){
     var thisInterval = this.interval()
-    console.log('active Index:', thisInterval.index)
     var html = _.map(this.intervals, (i) => {
       var klass = ( thisInterval == i ) ? 'bg-yellow-300' : ''
       var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
@@ -81,8 +73,6 @@ export default class extends Controller {
   }
 
   offset(sunrise){
-    // console.log("day of week", sunrise.toFormat('c'))
-
     switch (parseInt( sunrise.toFormat('c') ) - 1) {
       case 0: // monday
         return 0
@@ -103,7 +93,6 @@ export default class extends Controller {
   }
 
   getElement(interval) {
-    // console.log("elIndex:", interval.elIndex)
     switch (interval.elIndex) {
       case 0:
         return 'moon'

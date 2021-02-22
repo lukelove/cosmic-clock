@@ -17,20 +17,13 @@ export default class extends Controller {
   }
 
   go(sunrise, sunset) {
-    console.log('GO!', sunrise, sunset)
     this.getControllerByIdentifier('sun').init(sunrise)
     this.getControllerByIdentifier('moon').init(sunrise, sunset)
-
-    // var sunrise = DateTime.fromISO(times.sunrise.toISOString())
-    // var sunset = DateTime.fromISO(times.sunset.toISOString())
-
     this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
     this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
   }
 
   getLocation() {
-
-    console.log("location this.initialize")
 
     navigator.geolocation.getCurrentPosition((position) => {
       this.latValue = position.coords.latitude;
@@ -60,10 +53,6 @@ export default class extends Controller {
     }
 
     return sunrise
-  }
-
-  connect() {
-    console.log("hello from Loaction StimulusJS")
   }
 
   getControllerByIdentifier(identifier) {

@@ -7,7 +7,7 @@ export default class extends Controller {
   static targets = [ "timeNowStr" ]
 
   init(sunrise) {
-    console.log( 'Sunrise', sunrise )
+    // console.log( 'Sunrise', sunrise )
 
     var t = sunrise
 
@@ -34,7 +34,6 @@ export default class extends Controller {
 
   toHtml(){
     var thisInterval = this.interval()
-    console.log('active Index:', thisInterval.index)
     var html = _.map(this.intervals, (i) => {
       var klass = ( thisInterval == i ) ? 'bg-purple-500' : ''
       var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
