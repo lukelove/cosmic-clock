@@ -4,7 +4,7 @@ import Interval from "luxon/src/interval.js";
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr",  ]
+  static targets = [ "timeNowStr" ]
 
   init(times) {
     console.log( 'Sunrise', times.sunrise )
@@ -27,7 +27,7 @@ export default class extends Controller {
         string: i.start.toLocaleString(DateTime.TIME_24_WITH_SECONDS) + " - " + i.end.toLocaleString(DateTime.TIME_24_WITH_SECONDS)
       }
 
-      if(elCount == 4) { elCount = 0 }else { elCount+=1 } // this gives us access to know which element it is
+      if(elCount == 4) { elCount = 0 } else { elCount+=1 } // this gives us access to know which element it is
 
       return data
     })
