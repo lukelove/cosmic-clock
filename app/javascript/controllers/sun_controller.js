@@ -80,7 +80,7 @@ export default class extends Controller {
 
       var timeLeft = seconds
       // console.log('timeLeft', secToNextInterval, seconds, timeLeft); //log the number of seconds that have passed
-      that.timerRemainingTarget.innerHTML = Duration.fromMillis(timeLeft * 1000).toFormat('h:mm:ss')
+      that.timerRemainingTarget.innerHTML = Duration.fromMillis(timeLeft * 1000).toFormat('m:ss')
 
       that.setCircleDasharray(timeLeft);
       that.setRemainingPathColor(timeLeft);
@@ -169,9 +169,7 @@ calculateTimeFraction(timeLeft) {
 }
 
 setCircleDasharray(timeLeft) {
-  const circleDasharray = `${(
-    this.calculateTimeFraction(timeLeft) * FULL_DASH_ARRAY
-  ).toFixed(0)} 283`;
+  const circleDasharray = `${( this.calculateTimeFraction(timeLeft) * FULL_DASH_ARRAY ).toFixed(0)} 283`;
   this.timerPathTarget.setAttribute("stroke-dasharray", circleDasharray);
 }
 

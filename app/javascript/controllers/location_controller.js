@@ -34,10 +34,9 @@ export default class extends Controller {
     }
 
     if( Cookies.get('lat') && Cookies.get('lng') ){
-
       console.log('Use Cookies')
-      this.latValue = parseFloat( parseFloat( Cookies.get('lat') ) )
-      this.lngValue = parseFloat( parseFloat( Cookies.get('lng') ) )
+      this.latValue = parseFloat( Cookies.get('lat') )
+      this.lngValue = parseFloat( Cookies.get('lng') )
       goFetch()
     }else{
       console.log('Use geoLocation')
@@ -46,9 +45,6 @@ export default class extends Controller {
         this.lngValue = position.coords.longitude;
         Cookies.set('lat', this.latValue)
         Cookies.set('lng', this.lngValue)
-        
-        
-        console.log( 'cookies', Cookies.get() )
         goFetch()
       })
     }
