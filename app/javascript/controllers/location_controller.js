@@ -3,6 +3,8 @@ var SunCalc = require('suncalc');
 import { DateTime } from "luxon";
 var Countdown = require('countdown.js');
 import Cookies from "js-cookie";
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // optional for styling
 
 export default class extends Controller {
 
@@ -23,6 +25,18 @@ export default class extends Controller {
     this.getControllerByIdentifier('moon').init(sunrise, sunset)
     this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
     this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
+
+    this.addTippy()
+  }
+
+  addTippy() {
+    var elements = ["air", "water", "earth", "fire", "spirit"]
+    _.each(elements, (e) => {
+      _.each( _.concat(e, this.elementToPlanet(e)), (el) => {
+        tippy('.' + el, {content: _.capitalize(el)})
+      } )
+    })
+    
   }
 
   getLocation() {
@@ -85,6 +99,12 @@ export default class extends Controller {
       case 'moon':
         return 'earth'
     }
+  }
+
+  elementToPlanetHTML(element){
+    return _.map(this.elementToPlanet(element), (e) => {
+      return ['<div class="', e, ' mr-2"></div>'].join('')
+    }).join('')
   }
 
   elementToPlanet(element){

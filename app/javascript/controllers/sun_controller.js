@@ -77,15 +77,17 @@ export default class extends Controller {
   }
 
   toHtml(){
+    var controller = this.getControllerByIdentifier('location')
     this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
       var klass = ( this.activeInterval == i ) ? 'bg-purple-500' : ''
       var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
       var el = this.getElement(i)
       
-      var h = '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
+      var h = '<div class="' + klass + ' p-2 grid grid-cols-3 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
         h+= '<div>'+ i.string + '</div>'
         h+= '<div class="pl-12 ' + el + '">'+ _.capitalize(el) + '</div>'
+        h+= '<div class="flex flex-wrap content-start">' + controller.elementToPlanetHTML(el) + '</div>'
       h+= "</div>"
       
       return h
