@@ -18,17 +18,17 @@ export default class extends Controller {
     this.nightHourTarget.innerHTML = Duration.fromMillis(nightIntervalLength).toFormat('h:mm:ss')
     this.nightLengthTarget.innerHTML = Duration.fromMillis(nightMS).toFormat('h:mm:ss')
 
-    this.intervals = _.concat( this.makeInterval(0, sunrise, dayIntervalLength), this.makeInterval(12, sunset, nightIntervalLength) )
+    var dayIntervals = this.makeInterval(0, sunrise, this.offset(sunrise), dayIntervalLength)
+    var nightIntervals = this.makeInterval(12, sunset, _.last(dayIntervals).elIndex + 1, nightIntervalLength) 
+    this.intervals = _.concat( dayIntervals, nightIntervals )
     this.toHtml()
   }
 
-  makeInterval(indexOffset, t, intervalLength) {
-    var elCount = this.offset(t)
-
+  makeInterval(indexOffset, time, elCount, intervalLength) {
     var owner = (indexOffset == 0) ? 'sun' : 'moon'
 
     return _.map(_.times(12), (n) => {
-      var i = Interval.fromDateTimes(t, ( t = t.plus({millisecond: intervalLength}) ))
+      var i = Interval.fromDateTimes(time, ( time = time.plus({millisecond: intervalLength}) ))
 
       var realIndex = n+1 + ( (indexOffset == 0) ? 0 : 12 )
       var data = {
