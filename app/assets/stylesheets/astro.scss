@@ -35,3 +35,45 @@ $symbol-height: 25px;
   width: $symbol-width;
   height: $symbol-width;
 }
+.moon {
+  background-image: asset-url("alchemical/moon.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.venus {
+  background-image: asset-url("alchemical/venus.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.mercury {
+  background-image: asset-url("alchemical/mercury.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.saturn {
+  background-image: asset-url("alchemical/saturn.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.jupiter {
+  background-image: asset-url("alchemical/jupiter.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.mars {
+  background-image: asset-url("alchemical/mars.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
+.sun {
+  background-image: asset-url("alchemical/sun.svg");
+  background-repeat: no-repeat;
+  width: $symbol-width;
+  height: $symbol-width;
+}
