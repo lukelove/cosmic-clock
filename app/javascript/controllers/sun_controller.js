@@ -5,7 +5,7 @@ import CanvasCircularCountdown from 'canvas-circular-countdown';
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr", "timer" ]
+  static targets = [ "timeNowStr", "timer", "elementBlocks" ]
 
   init(sunrise) {
     var elCount = 0
@@ -79,6 +79,15 @@ export default class extends Controller {
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
+
+    // Element Blocks beside the TItle
+    var el = this.getElement(this.activeInterval);
+    this.elementBlocksTarget.innerHTML = _.map( 
+      _.concat(el, controller.elementToPlanet(el)), 
+      (el) => {
+        return ['<div class="inline-block ', el, '"></div>'].join('')
+      }).join('')
+
     this.focus()
   }
 

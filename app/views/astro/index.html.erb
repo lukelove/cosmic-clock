@@ -1,16 +1,5 @@
 <div data-controller="location" data-lat-value="" data-lng-value="">
 
-  <div>
-    <div class="grid grid-cols-3 gap-1">
-      <span>Sunrise: </span>
-      <span data-location-target="sunrise"> </span>
-    </div>
-    <div class="grid grid-cols-3 gap-1">
-      <span>Sunset: </span>
-      <span data-location-target="sunset"> </span>
-    </div>
-  </div>
-
   <div class="m-0 p-0 w-full">
     <div class="flex flex-row w-full">
       <div data-controller="sun" class="p-3 w-1/2 h-full">
@@ -18,12 +7,24 @@
           class="flex items-center bg-yellow-300 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-48 pl-24 pr-24 pt-48 space-y-4 text-center w-full"
         >
           <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
-          <h1 class="font-sans text-3xl font-semibold tracking-tight">
-            Sun Time
-          </h1>
+          <div class="">
+            <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Sun Time</div>
+            <div data-sun-target="elementBlocks" class="pt-4"></div>
+          </div>
           <p class="font-medium overflow-y-auto h-32 w-full" data-sun-target="timeNowStr">
-            ...loading...
+            Wherever you go, no matter what the weather, always bring your own sunshine
           </p>
+          <div class="text-xs w-full pt-10">
+            <div class="grid grid-cols-3 gap-1">
+              <span>Sunrise: </span>
+              <span data-location-target="sunrise"> </span>
+            </div>
+            <div class="grid grid-cols-3 gap-1">
+              <span>Sunset: </span>
+              <span data-location-target="sunset"> </span>
+            </div>
+          </div>
+
           <button
             data-location-target="btn"
             data-action="click->location#getLocation"
@@ -37,13 +38,14 @@
           class="flex items-center bg-gray-500 bg-right border-transparent rounded-3xl flex-col justify-center mb-0 ml-auto mr-auto mt-0 max-w-5xl pb-48 pl-24 pr-24 pt-48 space-y-4 w-full"
         >
           <%= render(partial: 'timer', locals: {controller: 'moon'}) %>
-          <h1 class="font-sans text-3xl font-semibold tracking-tight">
-            Moon Time
-          </h1>
+          <div class="">
+            <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Moon Time</div>
+            <div data-moon-target="elementBlocks" class="pt-4"></div>
+          </div>
           <p class="font-medium overflow-y-auto h-32 w-full" data-moon-target="timeNowStr">
-            ... nothing ... 
+            Always go with your passion, never ask if they are real or not
           </p>
-          <div class="font-medium w-full">
+          <div class="text-xs w-full pt-10">
             <div class="grid grid-cols-4 gap-1">
               <span>Day Length: </span>
               <span data-moon-target="dayLength"> </span>

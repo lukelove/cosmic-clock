@@ -5,7 +5,7 @@ import CanvasCircularCountdown from 'canvas-circular-countdown';
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", "timer" ]
+  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", "timer", "elementBlocks" ]
 
   init(sunrise, sunset) {
     var wholeDayMs = 86400000
@@ -100,6 +100,15 @@ export default class extends Controller {
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
+
+    // Element Blocks beside the TItle
+    var el = this.getElement(this.activeInterval);
+    this.elementBlocksTarget.innerHTML = _.map( 
+      _.concat(controller.planetToElement(el), el), 
+      (el) => {
+        return ['<div class="inline-block ', el, '"></div>'].join('')
+      }).join('')
+    
     this.focus()
         
   }
