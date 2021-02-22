@@ -1822,6 +1822,11 @@
   "resolved" "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001190.tgz"
   "version" "1.0.30001190"
 
+"canvas-circular-countdown@^1.5.0":
+  "integrity" "sha512-S/38DiWg5Uso2+wNvIEXqQFqZYuxV+UHJfnO6HI3/CucNYiTmoakbqLsUDVcPjU6GmaGJd8OiGJ43pue/+6t1A=="
+  "resolved" "https://registry.npmjs.org/canvas-circular-countdown/-/canvas-circular-countdown-1.5.0.tgz"
+  "version" "1.5.0"
+
 "case-sensitive-paths-webpack-plugin@^2.3.0":
   "integrity" "sha512-/4YgnZS8y1UXXmC02xD5rRrBEu6T5ub+mQHLNRj0fzTRbgdBYhsNo2V5EqwgqrExjxsjtF/OpAKAMkKsxbD5XQ=="
   "resolved" "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.3.0.tgz"
