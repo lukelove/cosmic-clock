@@ -1,10 +1,32 @@
 import { Controller } from 'stimulus'; 
 import { DateTime } from "luxon";
 import Interval from "luxon/src/interval.js";
+import Duration from "luxon/src/duration.js";
+var Countdown = require('countdown.js');
+
+const FULL_DASH_ARRAY = 283;
+const WARNING_THRESHOLD = 10;
+const ALERT_THRESHOLD = 5;
+
+const COLOR_CODES = {
+  info: {
+    color: "green"
+  },
+  warning: {
+    color: "orange",
+    threshold: WARNING_THRESHOLD
+  },
+  alert: {
+    color: "red",
+    threshold: ALERT_THRESHOLD
+  }
+};
+
+const TIME_LIMIT = 20;
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr" ]
+  static targets = [ "timeNowStr", "timerPath", "timerRemaining" ]
 
   init(sunrise) {
     // console.log( 'Sunrise', sunrise )
@@ -28,15 +50,56 @@ export default class extends Controller {
       return data
     })
 
+    this.refreshHTML()
+
+  }
+  
+  refreshHTML(){
     this.toHtml()
+    this.wait()
+  }
+
+  wait(){
+
+    var that = this
+    var nextInterval = _.find(this.intervals, (i) => { return (i.index == this.activeInterval.index + 1) })
+    var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
+    
+
+    // timer & countdown
+
+    // Credit: Mateusz Rybczonec
+
+  
+    let remainingPathColor = COLOR_CODES.info.color;
+
+
+    this.timerPathTarget.classList.toggle(remainingPathColor)
+
+    var countdown = new Countdown(secToNextInterval, function(seconds) {
+
+      var timeLeft = seconds
+      // console.log('timeLeft', secToNextInterval, seconds, timeLeft); //log the number of seconds that have passed
+      that.timerRemainingTarget.innerHTML = Duration.fromMillis(timeLeft * 1000).toFormat('h:mm:ss')
+
+      that.setCircleDasharray(timeLeft);
+      that.setRemainingPathColor(timeLeft);
+  
+    }, function() {
+       console.log("Countdown complete!") //log that the countdown has complete
+       that.refreshHTML()
+       console.log('countdown refresh complete')
+    });
+
+    
   }
 
 
   toHtml(){
-    var thisInterval = this.interval()
+    this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
-      var klass = ( thisInterval == i ) ? 'bg-purple-500' : ''
-      var tabIndex = (thisInterval == i ) ? 'tabindex="0"' : ''
+      var klass = ( this.activeInterval == i ) ? 'bg-purple-500' : ''
+      var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
       var el = this.getElement(i)
       
       var h = '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
@@ -48,7 +111,7 @@ export default class extends Controller {
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
-    var activeEl = document.querySelector('#sun-i-' + thisInterval.index)
+    var activeEl = document.querySelector('#sun-i-' + this.activeInterval.index)
     activeEl.focus()
     _.delay((el) => { el.blur() },100, activeEl)
   }
@@ -84,5 +147,32 @@ export default class extends Controller {
     });
   }
 
+
+
+
+
+setRemainingPathColor(timeLeft) {
+  const { alert, warning, info } = COLOR_CODES;
+  if (timeLeft <= alert.threshold) {
+    
+    this.timerPathTarget.classList.remove(warning.color);
+    this.timerPathTarget.classList.add(alert.color);
+  } else if (timeLeft <= warning.threshold) {
+    this.timerPathTarget.classList.remove(info.color);
+    this.timerPathTarget.classList.add(warning.color);
+  }
+}
+
+calculateTimeFraction(timeLeft) {
+  const rawTimeFraction = timeLeft / TIME_LIMIT;
+  return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+}
+
+setCircleDasharray(timeLeft) {
+  const circleDasharray = `${(
+    this.calculateTimeFraction(timeLeft) * FULL_DASH_ARRAY
+  ).toFixed(0)} 283`;
+  this.timerPathTarget.setAttribute("stroke-dasharray", circleDasharray);
+}
 
 }

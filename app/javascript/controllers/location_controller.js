@@ -1,19 +1,21 @@
 import { Controller } from 'stimulus';
 var SunCalc = require('suncalc');
 import { DateTime } from "luxon";
+var Countdown = require('countdown.js');
+import Cookies from "js-cookie";
 
 export default class extends Controller {
 
-  static targets = [ "sunrise", "sunset" ]
+  static targets = [ "btn", "sunrise", "sunset" ]
   static values = { lat: Number, lng: Number }
 
   initialize() {
-    if (navigator.geolocation) {
-      console.log('Geolocation is supported!');
+
+    if( Cookies.get('lat') && Cookies.get('lng') ){
+      this.btnTarget.classList.add('hidden')
+      this.getLocation();
     }
-    else {
-      console.log('Geolocation is not supported for this Browser/OS.');
-    }
+
   }
 
   go(sunrise, sunset) {
@@ -25,14 +27,32 @@ export default class extends Controller {
 
   getLocation() {
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.latValue = position.coords.latitude;
-      this.lngValue = position.coords.longitude;
-
+    var goFetch = () => {
       var today = this.today()
       var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
       fetch( url ).then(response => response.json()) .then((data) => { this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) })
-    })
+    }
+
+    if( Cookies.get('lat') && Cookies.get('lng') ){
+
+      console.log('Use Cookies')
+      this.latValue = parseFloat( parseFloat( Cookies.get('lat') ) )
+      this.lngValue = parseFloat( parseFloat( Cookies.get('lng') ) )
+      goFetch()
+    }else{
+      console.log('Use geoLocation')
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latValue = position.coords.latitude;
+        this.lngValue = position.coords.longitude;
+        Cookies.set('lat', this.latValue)
+        Cookies.set('lng', this.lngValue)
+        
+        
+        console.log( 'cookies', Cookies.get() )
+        goFetch()
+      })
+    }
+
 
   }
 
@@ -55,10 +75,40 @@ export default class extends Controller {
     return sunrise
   }
 
+  planetToElement(planet){
+    switch (planet) {
+      case 'sun':
+      case 'mars':
+        return 'fire'
+      case 'mercury':
+      case 'saturn':
+        return 'water'
+      case 'venus':
+      case 'jupiter':
+        return 'air'
+      case 'moon':
+        return 'earth'
+    }
+  }
+
+  elementToPlanet(element){
+    switch (element) {
+      case 'fire':
+        return ['sun', 'mars']
+      case 'water':
+        return ['mercury', 'saturn']
+      case 'air':
+        return ['venus', 'jupiter']
+      case 'earth':
+        return ['moon', 'fixed stars']
+    }
+  }
+
   getControllerByIdentifier(identifier) {
     return this.application.controllers.find(controller => {
       return controller.context.identifier === identifier;
     });
   }
-  
+
+
 }
