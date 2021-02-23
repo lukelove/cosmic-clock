@@ -7,11 +7,8 @@ export default class extends Controller {
 
   static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", 
                      "timer", "elementBlocks", "rulingPlanet"]
-
-  connect() {
-    console.log('connect MOON')
-  }
-
+  static values = { appLoaded: Number }
+  
   init(sunrise, sunset) {
     var wholeDayMs = 86400000
     var dayMS = sunrise.diff(sunset).milliseconds * -1
@@ -29,6 +26,8 @@ export default class extends Controller {
     this.intervals = _.concat( dayIntervals, nightIntervals )
 
     this.refreshHTML()
+
+    this.appLoadedValue = 1
   }
 
   refreshHTML(){

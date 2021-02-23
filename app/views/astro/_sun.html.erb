@@ -1,0 +1,31 @@
+<div data-controller="sun" class="p-3 w-1/2 h-full" data-app-loaded-value="0">
+  <div
+    class="flex items-center bg-yellow-300 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
+  >
+    <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
+    <div class="">
+      <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Sun Time</div>
+      <div data-sun-target="elementBlocks" class="pt-4"></div>
+    </div>
+    <p class="font-medium overflow-y-auto h-32 text-left" data-sun-target="timeNowStr">
+      Wherever you go, no matter what the weather, always bring your own sunshine
+    </p>
+    <div class="text-xs w-full pt-10">
+      <div class="grid grid-cols-3 gap-1">
+        <span>Sunrise: </span>
+        <span data-location-target="sunrise"> </span>
+      </div>
+      <div class="grid grid-cols-3 gap-1">
+        <span>Sunset: </span>
+        <span data-location-target="sunset"> </span>
+      </div>
+    </div>
+
+    <button
+      data-location-target="btn"
+      data-action="click->location#getLocation"
+      class="bg-blue-500 rounded shadow-md font-light pb-2 pl-4 pr-4 pt-2 text-center text-white w-40">
+      Get My Location
+    </button>
+  </div>
+</div>

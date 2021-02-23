@@ -6,10 +6,7 @@ import CanvasCircularCountdown from 'canvas-circular-countdown';
 export default class extends Controller {
 
   static targets = [ "timeNowStr", "timer", "elementBlocks" ]
-
-  connect() {
-    console.log('connect SUN')
-  }
+  static values = { appLoaded: Number }
 
   init(sunrise) {
     var elCount = 0
@@ -34,6 +31,7 @@ export default class extends Controller {
 
     this.refreshHTML()
 
+    this.appLoadedValue = 1
   }
   
   refreshHTML(){
