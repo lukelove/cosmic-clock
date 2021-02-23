@@ -82,8 +82,30 @@ export default class extends Controller {
       sunrise = DateTime.fromISO(times.sunrise.toISOString())
     }
 
+    this.rulingPlanet = this.dailyRuler(parseInt(sunrise.toFormat('c')))
+
     return sunrise
   }
+
+  dailyRuler(day_of_week){
+    switch (day_of_week) {
+      case 1: //monday
+        return 'moon'
+      case 2:
+        return 'mars'
+      case 3:
+        return 'mercury'
+      case 4:
+        return 'jupidter'
+      case 5:
+        return 'venus'
+      case 6:
+        return 'saturn'
+      case 7:
+        return 'sun'
+    }
+  }
+    
 
   planetToElement(planet){
     switch (planet) {
@@ -103,8 +125,12 @@ export default class extends Controller {
 
   elementToPlanetHTML(element){
     return _.map(this.elementToPlanet(element), (e) => {
-      return ['<div class="', e, ' mr-2"></div>'].join('')
+      return elementToHTML(e)
     }).join('')
+  }
+
+  elementToHTML(e, otherClasses) {
+    return ['<div class="', e, ' ', otherClasses, ' mr-2"></div>'].join('')
   }
 
   elementToPlanet(element){

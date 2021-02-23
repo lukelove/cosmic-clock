@@ -7,6 +7,10 @@ export default class extends Controller {
 
   static targets = [ "timeNowStr", "timer", "elementBlocks" ]
 
+  connect() {
+    console.log('connect SUN')
+  }
+
   init(sunrise) {
     var elCount = 0
 
@@ -17,8 +21,11 @@ export default class extends Controller {
         index: n,
         elIndex: elCount,
         interval: i,
-        string: i.start.toLocaleString(DateTime.TIME_24_WITH_SECONDS) + " - " + i.end.toLocaleString(DateTime.TIME_24_WITH_SECONDS)
+        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE ),
       }
+
+      var controller = this.getControllerByIdentifier('location')
+      data.elements = _.concat( this.getElement(data), controller.elementToPlanet( this.getElement(data) ) )
 
       if(elCount == 4) { elCount = 0 } else { elCount+=1 } // this gives us access to know which element it is
 
@@ -58,21 +65,26 @@ export default class extends Controller {
       // Do your stuff here while timer is running...
     }).start()
 
-    var countdown = new Countdown(secToNextInterval, function(seconds) {}, function() { that.refreshHTML() });
+    var sunCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+      console.log('countdown Complete, time to refresh')
+      that.refreshHTML()
+    });
+  }
+
+  elementsToHTML(interval){
+    var controller = this.getControllerByIdentifier('location')
+    return _.map(interval.elements, (e) => { return controller.elementToHTML(e, 'inline-block') }).join('')
   }
 
   toHtml(){
-    var controller = this.getControllerByIdentifier('location')
     this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
-      var klass = ( this.activeInterval == i ) ? 'bg-purple-500' : ''
+      var klass = ( this.activeInterval == i ) ? 'bg-purple-400' : ''
       var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
-      var el = this.getElement(i)
       
-      var h = '<div class="' + klass + ' p-2 grid grid-cols-3 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
+      var h = '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + i.index + '">'
         h+= '<div>'+ i.string + '</div>'
-        h+= '<div class="pl-12 ' + el + '">'+ _.capitalize(el) + '</div>'
-        h+= '<div class="flex flex-wrap content-start">' + controller.elementToPlanetHTML(el) + '</div>'
+        h+= '<div class="w-full">'+ this.elementsToHTML(i) + '</div>'
       h+= "</div>"
       
       return h
@@ -81,13 +93,7 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    var el = this.getElement(this.activeInterval);
-    this.elementBlocksTarget.innerHTML = _.map( 
-      _.concat(el, controller.elementToPlanet(el)), 
-      (el) => {
-        return ['<div class="inline-block ', el, '"></div>'].join('')
-      }).join('')
-
+    this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.activeInterval)
     this.focus()
   }
 

@@ -5,7 +5,12 @@ import CanvasCircularCountdown from 'canvas-circular-countdown';
 
 export default class extends Controller {
 
-  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", "timer", "elementBlocks" ]
+  static targets = [ "timeNowStr", "dayHour", "nightHour", "dayLength", "nightLength", 
+                     "timer", "elementBlocks", "rulingPlanet"]
+
+  connect() {
+    console.log('connect MOON')
+  }
 
   init(sunrise, sunset) {
     var wholeDayMs = 86400000
@@ -14,15 +19,15 @@ export default class extends Controller {
     var dayIntervalLength = parseInt(dayMS/12)
     var nightIntervalLength = parseInt(nightMS/12)
 
-    this.dayHourTarget.innerHTML = Duration.fromMillis(dayIntervalLength).toFormat('h:mm:ss')
-    this.dayLengthTarget.innerHTML = Duration.fromMillis(dayMS).toFormat('h:mm:ss')
-    this.nightHourTarget.innerHTML = Duration.fromMillis(nightIntervalLength).toFormat('h:mm:ss')
-    this.nightLengthTarget.innerHTML = Duration.fromMillis(nightMS).toFormat('h:mm:ss')
+    this.dayHourTarget.innerHTML = Duration.fromMillis(dayIntervalLength).toFormat('h:mm')
+    this.dayLengthTarget.innerHTML = Duration.fromMillis(dayMS).toFormat('h:mm')
+    this.nightHourTarget.innerHTML = Duration.fromMillis(nightIntervalLength).toFormat('h:mm')
+    this.nightLengthTarget.innerHTML = Duration.fromMillis(nightMS).toFormat('h:mm')
 
     var dayIntervals = this.makeInterval(0, sunrise, this.offset(sunrise), dayIntervalLength)
     var nightIntervals = this.makeInterval(12, sunset, _.last(dayIntervals).elIndex + 1, nightIntervalLength) 
     this.intervals = _.concat( dayIntervals, nightIntervals )
-    
+
     this.refreshHTML()
   }
 
@@ -55,8 +60,11 @@ export default class extends Controller {
       // Do your stuff here while timer is running...
     }).start()
 
-    var countdown = new Countdown(secToNextInterval, function(seconds) {}, function() { that.refreshHTML() });
-  }  
+    var moonCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+      console.log('countdown Complete, time to refresh')
+      that.refreshHTML()
+    });
+  }
 
   makeInterval(indexOffset, time, elCount, intervalLength) {
     var owner = (indexOffset == 0) ? 'sun' : 'moon'
@@ -70,8 +78,11 @@ export default class extends Controller {
         index: realIndex,
         elIndex: elCount,
         interval: i,
-        string: i.start.toLocaleString(DateTime.TIME_24_WITH_SECONDS) + " - " + i.end.toLocaleString(DateTime.TIME_24_WITH_SECONDS)
+        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE	)
       }
+
+      var controller = this.getControllerByIdentifier('location')      
+      data.elements = _.concat( controller.planetToElement( this.getElement(data) ), this.getElement(data) )
 
       if(elCount == 6) { elCount = 0 } else { elCount+=1 } // this gives us access to know which element it is
 
@@ -79,9 +90,16 @@ export default class extends Controller {
     })
   }
 
+  elementsToHTML(interval){
+    var controller = this.getControllerByIdentifier('location')
+    return _.map(interval.elements, (e) => { return controller.elementToHTML(e, 'inline-block') }).join('')
+  }
+
   toHtml(){
 
     var controller = this.getControllerByIdentifier('location')
+
+    this.rulingPlanetTarget.innerHTML = controller.elementToHTML( controller.rulingPlanet )
 
     this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
@@ -89,11 +107,12 @@ export default class extends Controller {
       var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
       var el = this.getElement(i)
       
-      var h = '<div class="' + klass + ' p-2 grid grid-cols-4" '+ tabIndex + ' id="moon-i-' + i.id + '">'
-        h+= '<div class="w-9">'+ i.index + ' h</div>'
-        h+= '<div class="w-60">'+ i.string + '</div>'
-        h+= '<div class="w-full pl-12 ' + el + '">'+ _.capitalize(el) + '</div>'
-        h+= '<div class="w-full pl-12 ' + controller.planetToElement(el) + '">' + controller.planetToElement(el) + '</div>'
+      var h = '<div class="' + klass + ' p-2 grid grid-cols-2" '+ tabIndex + ' id="moon-i-' + i.id + '">'
+      h+= '<div class="w-full inline-flex">'
+        h+= '<div class="inline-block w-10 mr-4">'+ i.index + ' h</div>'
+        h+= '<div class="inline-block w-full">'+ i.string + '</div>'
+      h+= '</div>'
+      h+= '<div class="w-full">'+ this.elementsToHTML(i) + '</div>'
       h+= "</div>"
       
       return h
@@ -102,12 +121,7 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    var el = this.getElement(this.activeInterval);
-    this.elementBlocksTarget.innerHTML = _.map( 
-      _.concat(controller.planetToElement(el), el), 
-      (el) => {
-        return ['<div class="inline-block ', el, '"></div>'].join('')
-      }).join('')
+    this.elementBlocksTarget.innerHTML = this.elementsToHTML( this.activeInterval )
     
     this.focus()
         

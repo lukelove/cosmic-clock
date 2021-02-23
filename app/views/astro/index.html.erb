@@ -4,14 +4,14 @@
     <div class="flex flex-row w-full">
       <div data-controller="sun" class="p-3 w-1/2 h-full">
         <div
-          class="flex items-center bg-yellow-300 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-48 pl-24 pr-24 pt-48 space-y-4 text-center w-full"
+          class="flex items-center bg-yellow-300 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
         >
           <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
           <div class="">
             <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Sun Time</div>
             <div data-sun-target="elementBlocks" class="pt-4"></div>
           </div>
-          <p class="font-medium overflow-y-auto h-32 w-full" data-sun-target="timeNowStr">
+          <p class="font-medium overflow-y-auto h-32 text-left" data-sun-target="timeNowStr">
             Wherever you go, no matter what the weather, always bring your own sunshine
           </p>
           <div class="text-xs w-full pt-10">
@@ -35,14 +35,14 @@
       </div>
       <div data-controller="moon" class="p-3 w-1/2 h-full">
         <div
-          class="flex items-center bg-gray-500 bg-right border-transparent rounded-3xl flex-col justify-center mb-0 ml-auto mr-auto mt-0 max-w-5xl pb-48 pl-24 pr-24 pt-48 space-y-4 w-full"
+          class="flex items-center bg-gray-500 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
         >
           <%= render(partial: 'timer', locals: {controller: 'moon'}) %>
           <div class="">
             <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Moon Time</div>
             <div data-moon-target="elementBlocks" class="pt-4"></div>
           </div>
-          <p class="font-medium overflow-y-auto h-32 w-full" data-moon-target="timeNowStr">
+          <p class="font-medium overflow-y-auto h-32 text-left" data-moon-target="timeNowStr">
             Always go with your passion, never ask if they are real or not
           </p>
           <div class="text-xs w-full pt-10">
@@ -59,6 +59,8 @@
               <span data-moon-target="nightHour"> </span>
             </div>
           </div>
+
+          <div data-moon-target="rulingPlanet" class="absolute top-10 right-10"></div>
 
         </div>
       </div>
