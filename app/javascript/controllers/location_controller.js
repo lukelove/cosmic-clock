@@ -43,12 +43,27 @@ export default class extends Controller {
 
     var goFetch = () => {
       var today = this.today()
+
+      if( Cookies.get('today') == today.toISODate() ){
+        _.delay(() => { // we need the delay so the controllers finish loading
+          this.go( DateTime.fromISO(Cookies.get('sunrise')), DateTime.fromISO(Cookies.get('sunset')) ) 
+        }, 10)
+
+        return
+      }
+
       var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
-      fetch( url ).then(response => response.json()) .then((data) => { this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) })
+      fetch( url ).then(response => response.json()) .then((data) => { 
+        
+        Cookies.set('today', today.toISODate())
+        Cookies.set('sunrise', data.results.sunrise)
+        Cookies.set('sunset', data.results.sunset)
+        
+        this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) 
+      })
     }
 
     if( Cookies.get('lat') && Cookies.get('lng') ){
-      console.log('Use Cookies')
       this.latValue = parseFloat( Cookies.get('lat') )
       this.lngValue = parseFloat( Cookies.get('lng') )
       goFetch()

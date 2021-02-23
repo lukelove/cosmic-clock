@@ -109,7 +109,7 @@ export default class extends Controller {
       
       var h = '<div class="' + klass + ' p-2 grid grid-cols-2" '+ tabIndex + ' id="moon-i-' + i.id + '">'
       h+= '<div class="w-full inline-flex">'
-        h+= '<div class="inline-block w-10 mr-4">'+ i.index + ' h</div>'
+        h+= '<div class="inline-block w-16 mr-4">'+ i.index + ' h</div>'
         h+= '<div class="inline-block w-full">'+ i.string + '</div>'
       h+= '</div>'
       h+= '<div class="w-full">'+ this.elementsToHTML(i) + '</div>'
