@@ -26,13 +26,54 @@ export default class extends Controller {
     this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
     this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
 
+    
+    this.sunIntervals = this.getControllerByIdentifier('sun').intervals
+    this.moonIntervals = this.getControllerByIdentifier('moon').intervals
+    this.findOverlaps()
+
     this.addTippy()
+  }
+
+  findOverlaps() {
+
+    console.log('findOverlaps')
+    var overlaps = _.map(this.moonIntervals, (moonI) => {
+      var sunIntervals = _.filter(this.sunIntervals, (sunI) => {
+        
+        if( _.intersection(moonI.elements, sunI.elements ).length == 0 ) return
+
+        return sunI.interval.overlaps(moonI.interval)
+      })
+
+      return { moonInterval: moonI, sunIntervals: sunIntervals }
+    })
+
+    overlaps = _.filter(overlaps, (overlap) => { return overlap.sunIntervals.length > 0 })
+
+    document.querySelector('#overlaps').innerHTML = _.map(overlaps, (overlap) => {
+
+      return _.map(overlap.sunIntervals, (sunI) => {
+        var html = document.querySelector('.overlapTemplate').cloneNode(true)
+        html.querySelector('.moon-planet').classList.add( overlap.moonInterval.planet )
+        html.querySelector('.sun-planet').classList.add( sunI.element )
+
+        var intersection = overlap.moonInterval.interval.intersection(sunI.interval)
+        html.querySelector('.start').innerHTML = intersection.start.toFormat('hh:mm')
+        html.querySelector('.end').innerHTML = intersection.end.toFormat('hh:mm')
+        html.querySelector('.length').innerHTML = intersection.length('minutes').toFixed() + 'min'
+        return html.outerHTML
+      }).join('')
+      
+
+    }).join('')
+
+    // console.log('overlaps', overlaps)
   }
 
   addTippy() {
     var elements = ["air", "water", "earth", "fire", "spirit"]
     _.each(elements, (e) => {
-      _.each( _.concat(e, this.elementToPlanet(e)), (el) => {
+      _.each( _.concat(e, this.elementToPlanets(e)), (el) => {
         tippy('.' + el, {content: _.capitalize(el)})
       } )
     })
@@ -138,8 +179,8 @@ export default class extends Controller {
     }
   }
 
-  elementToPlanetHTML(element){
-    return _.map(this.elementToPlanet(element), (e) => {
+  elementToPlanetsHTML(element){
+    return _.map(this.elementToPlanets(element), (e) => {
       return elementToHTML(e)
     }).join('')
   }
@@ -148,7 +189,7 @@ export default class extends Controller {
     return ['<div class="', e, ' ', otherClasses, ' mr-2"></div>'].join('')
   }
 
-  elementToPlanet(element){
+  elementToPlanets(element){
     switch (element) {
       case 'fire':
         return ['sun', 'mars']

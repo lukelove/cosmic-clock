@@ -77,11 +77,14 @@ export default class extends Controller {
         index: realIndex,
         elIndex: elCount,
         interval: i,
-        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE	)
+        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE	),
       }
 
-      var controller = this.getControllerByIdentifier('location')      
-      data.elements = _.concat( controller.planetToElement( this.getElement(data) ), this.getElement(data) )
+      var translator = this.getControllerByIdentifier('location')
+      data.planet = this.getPlanet(data)
+      data.element = translator.planetToElement( data.planet )
+
+      data.elements = _.concat( data.element, data.planet )
 
       if(elCount == 6) { elCount = 0 } else { elCount+=1 } // this gives us access to know which element it is
 
@@ -90,21 +93,21 @@ export default class extends Controller {
   }
 
   elementsToHTML(interval){
-    var controller = this.getControllerByIdentifier('location')
-    return _.map(interval.elements, (e) => { return controller.elementToHTML(e, 'inline-block') }).join('')
+    var translator = this.getControllerByIdentifier('location')
+    return _.map(interval.elements, (e) => { return translator.elementToHTML(e, 'inline-block') }).join('')
   }
 
   toHtml(){
 
-    var controller = this.getControllerByIdentifier('location')
+    var translator = this.getControllerByIdentifier('location')
 
-    this.rulingPlanetTarget.innerHTML = controller.elementToHTML( controller.rulingPlanet )
+    this.rulingPlanetTarget.innerHTML = translator.elementToHTML( translator.rulingPlanet )
 
     this.activeInterval = this.interval()
     var html = _.map(this.intervals, (i) => {
       var klass = ( this.activeInterval == i ) ? 'bg-yellow-300' : ''
       var tabIndex = (this.activeInterval == i ) ? 'tabindex="0"' : ''
-      var el = this.getElement(i)
+      var el = this.getPlanet(i)
       
       var h = '<div class="' + klass + ' p-2 grid grid-cols-2" '+ tabIndex + ' id="moon-i-' + i.id + '">'
       h+= '<div class="w-full inline-flex">'
@@ -156,7 +159,7 @@ export default class extends Controller {
 
   }
 
-  getElement(interval) {
+  getPlanet(interval) {
     switch (interval.elIndex) {
       case 0:
         return 'moon'

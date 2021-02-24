@@ -21,8 +21,12 @@ export default class extends Controller {
         string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE ),
       }
 
-      var controller = this.getControllerByIdentifier('location')
-      data.elements = _.concat( this.getElement(data), controller.elementToPlanet( this.getElement(data) ) )
+      var translator = this.getControllerByIdentifier('location')
+
+      data.element = this.getElement(data)
+      data.planets = translator.elementToPlanets( data.element )
+
+      data.elements = _.concat( data.element, data.planets )
 
       if(elCount == 4) { elCount = 0 } else { elCount+=1 } // this gives us access to know which element it is
 
@@ -70,8 +74,8 @@ export default class extends Controller {
   }
 
   elementsToHTML(interval){
-    var controller = this.getControllerByIdentifier('location')
-    return _.map(interval.elements, (e) => { return controller.elementToHTML(e, 'inline-block') }).join('')
+    var translator = this.getControllerByIdentifier('location')
+    return _.map(interval.elements, (e) => { return translator.elementToHTML(e, 'inline-block') }).join('')
   }
 
   toHtml(){
