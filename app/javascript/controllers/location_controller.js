@@ -36,13 +36,12 @@ export default class extends Controller {
 
   findOverlaps() {
 
-    console.log('findOverlaps')
     var overlaps = _.map(this.moonIntervals, (moonI) => {
       var sunIntervals = _.filter(this.sunIntervals, (sunI) => {
         
         if( _.intersection(moonI.elements, sunI.elements ).length == 0 ) return
-
         return sunI.interval.overlaps(moonI.interval)
+
       })
 
       return { moonInterval: moonI, sunIntervals: sunIntervals }
@@ -50,24 +49,54 @@ export default class extends Controller {
 
     overlaps = _.filter(overlaps, (overlap) => { return overlap.sunIntervals.length > 0 })
 
+    var focusedOnNext = false
+
     document.querySelector('#overlaps').innerHTML = _.map(overlaps, (overlap) => {
 
       return _.map(overlap.sunIntervals, (sunI) => {
+
         var html = document.querySelector('.overlapTemplate').cloneNode(true)
-        html.querySelector('.moon-planet').classList.add( overlap.moonInterval.planet )
+
+
+        if( !focusedOnNext ) {
+          if( sunI.interval.contains( DateTime.now() ) || sunI.interval.isAfter( DateTime.now()) ){
+            // yes focus here
+            html.querySelector('.widget').setAttribute('tabindex', 0)
+            html.querySelector('.widget').classList.add('bg-green-100')
+            html.querySelector('.widget').classList.add('tabindex')
+            html.querySelector('.widget').classList.remove('bg-blue-100')
+            focusedOnNext = true
+          }
+
+        }
+
+        
         html.querySelector('.sun-planet').classList.add( sunI.element )
+        html.querySelector('.moon-planet').classList.add( overlap.moonInterval.planet )
+
+        if( this.rulingPlanet == overlap.moonInterval.planet ){
+          html.querySelector('.widget').classList.remove('bg-blue-100')
+          html.querySelector('.widget').classList.add('bg-yellow-200')
+          // html.querySelector('.moon-planet').parentNode.classList.add('bg-blue-500')
+          // html.querySelector('.widget .rulingPlanet').classList.remove('hidden')
+          // html.querySelector('.widget .rulingPlanet').innerHTML = this.elementToHTML( overlap.moonInterval.planet )
+        }
 
         var intersection = overlap.moonInterval.interval.intersection(sunI.interval)
-        html.querySelector('.start').innerHTML = intersection.start.toFormat('hh:mm')
-        html.querySelector('.end').innerHTML = intersection.end.toFormat('hh:mm')
-        html.querySelector('.length').innerHTML = intersection.length('minutes').toFixed() + 'min'
+        html.querySelector('.start').innerHTML = intersection.start.toFormat('HH:mm')
+        html.querySelector('.end').innerHTML = intersection.end.toFormat('HH:mm')
+        html.querySelector('.length').innerHTML = intersection.length('minutes').toFixed() + 'm'
         return html.outerHTML
       }).join('')
       
 
     }).join('')
 
-    // console.log('overlaps', overlaps)
+    var activeEl = document.querySelector('#overlaps .tabindex')
+    _.delay((el) => { el.focus() }, 300, activeEl)
+    _.delay((el) => { el.blur() }, 350, activeEl)
+    // activeEl.focus()
+    
   }
 
   addTippy() {
@@ -81,6 +110,8 @@ export default class extends Controller {
   }
 
   getLocation() {
+
+    this.btnTarget.classList.add('hidden')
 
     var goFetch = () => {
       var today = this.today()

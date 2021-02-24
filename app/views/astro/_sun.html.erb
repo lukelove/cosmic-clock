@@ -1,16 +1,17 @@
-<div data-controller="sun" class="p-3 w-1/2 h-full" data-app-loaded-value="0">
+<div data-controller="sun" class="p-3 w-full md:w-1/2 h-full" data-app-loaded-value="0">
   <div
-    class="flex items-center bg-yellow-300 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
+    class="flex items-center bg-yellow-400 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
   >
     <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
-    <div class="">
+    <div class="w-4/5">
       <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Sun Time</div>
       <div data-sun-target="elementBlocks" class="pt-4"></div>
+      <hr class="m-2" />
     </div>
-    <p class="font-medium overflow-y-auto h-32 text-left" data-sun-target="timeNowStr">
+    <p class="font-medium overflow-y-auto w-4/5 h-32 text-left" data-sun-target="timeNowStr">
       Wherever you go, no matter what the weather, always bring your own sunshine
     </p>
-    <div class="text-xs w-full pt-10">
+    <div class="text-xs w-full pt-10 hidden">
       <div class="grid grid-cols-3 gap-1">
         <span>Sunrise: </span>
         <span data-location-target="sunrise"> </span>
