@@ -22,7 +22,8 @@ export default class extends Controller {
     this.nightLengthTarget.innerHTML = Duration.fromMillis(nightMS).toFormat('h:mm')
 
     var dayIntervals = this.makeInterval(0, sunrise, this.offset(sunrise), dayIntervalLength)
-    var nightIntervals = this.makeInterval(12, sunset, _.last(dayIntervals).elIndex + 1, nightIntervalLength) 
+    var offset = ( _.last(dayIntervals).elIndex == 6 ) ? 0 : (_.last(dayIntervals).elIndex + 1)
+    var nightIntervals = this.makeInterval(12, sunset, offset, nightIntervalLength) 
     this.intervals = _.concat( dayIntervals, nightIntervals )
 
     this.refreshHTML()

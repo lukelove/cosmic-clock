@@ -183,7 +183,7 @@ export default class extends Controller {
       case 3:
         return 'mercury'
       case 4:
-        return 'jupidter'
+        return 'jupiter'
       case 5:
         return 'venus'
       case 6:
