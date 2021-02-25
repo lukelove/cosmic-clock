@@ -18,7 +18,7 @@ export default class extends Controller {
         index: n,
         elIndex: elCount,
         interval: i,
-        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE ),
+        string: i.start.toLocaleString(DateTime.TIME_24_SIMPLE ) + " - " + i.end.toLocaleString(DateTime.TIME_24_SIMPLE ), //time_string
       }
 
       var translator = this.getControllerByIdentifier('location')

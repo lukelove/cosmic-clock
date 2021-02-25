@@ -11,6 +11,8 @@ import "channels"
 // Stimulus controllers
 import "controllers"
 
+import "windows_in_time"
+
 var _ = require('lodash');
 
 

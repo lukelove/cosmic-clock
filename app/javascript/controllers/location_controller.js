@@ -174,23 +174,8 @@ export default class extends Controller {
     return sunrise
   }
 
-  dailyRuler(day_of_week){
-    switch (day_of_week) {
-      case 1: //monday
-        return 'moon'
-      case 2:
-        return 'mars'
-      case 3:
-        return 'mercury'
-      case 4:
-        return 'jupiter'
-      case 5:
-        return 'venus'
-      case 6:
-        return 'saturn'
-      case 7:
-        return 'sun'
-    }
+  dailyRuler(day_of_week){ // 1-7
+    ['moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'sun'][day_of_week - 1]
   }
     
 
