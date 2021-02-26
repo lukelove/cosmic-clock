@@ -68,31 +68,16 @@ class MoonMagic {
     this.sunshineHourLengthInMS = parseInt(dayMS/12) // milliseconds
     this.moonlightHourLengthInMS = parseInt(nightMS/12) // milliseconds
 
-
-    this.sunshineIntervals = this.createInterval(0, sunrise, this.offset(sunrise), this.sunshineHourLengthInMS)
-    var offset = ( _.last(this.sunshineIntervals).planet == 'mercury' ) ? 0 : ( this.planets().indexOf(_.last(this.sunshineIntervals)) + 1)
-    this.moonlightIntervals = this.createInterval(12, sunset, offset, this.moonlightHourLengthInMS) 
+    this.sunshineIntervals = this.createInterval(0, sunrise, this.firstPlanetOfTheDay(sunrise), this.sunshineHourLengthInMS)
+    this.moonlightIntervals = this.createInterval(12, sunset, _.last(this.sunshineIntervals).planet, this.moonlightHourLengthInMS) 
     this.intervals = _.concat( this.sunshineIntervals, this.moonlightIntervals )
   }
 
-  offset(sunrise){
-    switch (parseInt( sunrise.toFormat('c') ) - 1) {
-      case 0: // monday
-        return 0
-      case 1: // tuesday
-        return 3
-      case 2: // wednesday
-        return 6
-      case 3: // thursday
-        return 2
-      case 4: // friday
-        return 6
-      case 5: // saturday
-        return 1
-      case 6: // sunday
-        return 4
-    }
+  planets() { return ['moon', 'saturn', 'jupiter', 'mars', 'sun', 'venus', 'mercury'] }
 
+  firstPlanetOfTheDay(sunrise){
+    var planet_days = ['moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'sun']
+    return planet_days[ parseInt( sunrise.toFormat('c') ) - 1 ]
   }
 
   planetToElement(planet){
@@ -111,15 +96,20 @@ class MoonMagic {
     }
   }
 
-  planets() { return ['moon', 'saturn', 'jupiter', 'mars', 'sun', 'venus', 'mercury'] }
+  nextPlanet(planet){
+    var currentIndex = this.planets().indexOf(planet)
+    var nextIndex = currentIndex + 1
+    
+    return ( this.planets()[nextIndex] == undefined ) ? this.planets()[0] : this.planets()[nextIndex]
+  }
 
-  createInterval(indexOffset, time, elOffset, intervalLength) {
+  createInterval(indexOffset, time, intervalPlanet, intervalLength) {
     var loopCount = 0
     var owner = (indexOffset == 0) ? 'sun' : 'moon'
 
     return _.map(_.times(12), (n) => {
-      var planet = this.planets()[elOffset]
-      if(elOffset == 6) { elOffset = 0 } else { elOffset+=1 } // this gives us access to know which element it is
+      var planet = intervalPlanet
+      intervalPlanet = this.nextPlanet(intervalPlanet)
 
       return new MoonInterval(
         Interval.fromDateTimes(time, ( time = time.plus({millisecond: intervalLength}) )),
@@ -132,7 +122,6 @@ class MoonMagic {
 
 
 }
-
 
 class SunInterval extends CelestialInterval {
   constructor(interval, element, planets){
@@ -183,7 +172,7 @@ class Earth {
     // if now is before sunrise, use yesterday
 
     var times = SunCalc.getTimes(new Date(), this.lat, this.lng);
-    console.log('times', times, this.lat, this.lng)
+    // console.log('times', times, this.lat, this.lng)
     var sunrise = DateTime.fromISO(times.sunrise.toISOString())
 
     if( DateTime.now() < sunrise ){
