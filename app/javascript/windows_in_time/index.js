@@ -194,11 +194,49 @@ class Earth {
 
 }
 
+class WindowMagic {
+  constructor(parent){
+    parent.sun.intervals
+    parent.moon.intervals
+
+
+    var windows = _.map(parent.moon.intervals, (moonI) => {
+      var sunIntervals = _.filter(parent.sun.intervals, (sunI) => {
+        
+        if( _.intersection(moonI.elements, sunI.elements ).length == 0 ) return
+        return sunI.interval.overlaps(moonI.interval)
+
+      })
+
+      return { moonInterval: moonI, sunIntervals: sunIntervals }
+    })
+
+    windows = _.filter(windows, (overlap) => { return overlap.sunIntervals.length > 0 })
+    windows = _.map( windows, (window) => {
+      return _.map(window.sunIntervals, (sunInterval) => {
+        return new TimeWindow( window.moonInterval, sunInterval, parent.earth.daily_ruler )
+      })
+    })
+
+    this.time_windows = _.flatten(windows)
+  }
+}
+
+class TimeWindow {
+  constructor(moonInterval, sunInterval, dailyRuler){
+    this.moonInterval = moonInterval
+    this.sunInterval = sunInterval
+    this.interval = moonInterval.interval.intersection(sunInterval.interval)
+    this.golden = _.intersection(sunInterval.elements, [dailyRuler]).length
+  }
+}
+
 class WindowsInTime {
   constructor(date, lat, lng){
     this.earth = new Earth(date, lat, lng)
     this.sun = new SunMagic(this.earth.sunrise)
     this.moon = new MoonMagic(this.earth.sunrise, this.earth.sunset)
+    this.windows = new WindowMagic(this)
   }
 }
 
