@@ -6,12 +6,25 @@ import Cookies from "js-cookie";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
+import { WindowsInTime } from 'windows-in-time';
+// var wit = require('windows-in-time')
+
 export default class extends Controller {
 
   static targets = [ "btn", "sunrise", "sunset" ]
   static values = { lat: Number, lng: Number }
 
   initialize() {
+
+    
+
+    console.log('LOC WindowsInTime start', new WindowsInTime(DateTime.now(), '-8.340539', '115.091949') )
+
+    return
+
+    // var wit = new WindowsInTime(DateTime.now(), '-8.340539', '115.091949')
+    // console.log('LOC WindowsInTime end', wit)
+
 
     if( Cookies.get('lat') && Cookies.get('lng') ){
       this.btnTarget.classList.add('hidden')
