@@ -198,8 +198,10 @@ class WindowMagic {
   constructor(parent){
     parent.sun.intervals
     parent.moon.intervals
+    this.createIntervals(parent)
+  }
 
-
+  createIntervals(parent){
     var windows = _.map(parent.moon.intervals, (moonI) => {
       var sunIntervals = _.filter(parent.sun.intervals, (sunI) => {
         
@@ -218,16 +220,19 @@ class WindowMagic {
       })
     })
 
-    this.time_windows = _.flatten(windows)
+    this.intervals = _.flatten(windows)
   }
+
 }
 
 class TimeWindow {
   constructor(moonInterval, sunInterval, dailyRuler){
-    this.moonInterval = moonInterval
-    this.sunInterval = sunInterval
+    // this.moonInterval = moonInterval
+    // this.sunInterval = sunInterval
+    this.element = sunInterval.element
+    this.planet = moonInterval.planet
     this.interval = moonInterval.interval.intersection(sunInterval.interval)
-    this.golden = _.intersection(sunInterval.elements, [dailyRuler]).length
+    this.golden = _.intersection(sunInterval.elements, [dailyRuler]).length == 1 && this.planet == dailyRuler
   }
 }
 
