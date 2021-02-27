@@ -37,46 +37,20 @@ export default class extends Controller {
       windows_in_time.magic()
       this.toHTML(windows_in_time)
       this.getControllerByIdentifier('sun').init(windows_in_time.sun)
-      // this.getControllerByIdentifier('moon').init(windows_in_time)
+      this.getControllerByIdentifier('moon').init(windows_in_time.moon, windows_in_time.earth.daily_ruler)
 
       this.addTippy()
     })
   }
 
   toHTML( windows_in_time ) {
-
     console.log('toHTML', windows_in_time)
-
     this.addWindows(windows_in_time.windows.intervals)
-
-    
   }
-
-  // go(sunrise, sunset) {
-
-  //   // var windows_in_time = new WindowsInTime(DateTime.now(), '-8.340539', '115.091949')
-
-    
-  //   console.log('windows', windows)
-
-  //   // this.getControllerByIdentifier('sun').init(sunrise)
-  //   // this.getControllerByIdentifier('moon').init(sunrise, sunset)
-  //   // this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
-  //   // this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
-
-    
-  //   // this.sunIntervals = this.getControllerByIdentifier('sun').intervals
-  //   // this.moonIntervals = this.getControllerByIdentifier('moon').intervals
-  //   // this.findOverlaps()
-
-    
-  // }
 
   addWindows(window_intervals) {
 
     var focusedOnNext = false
-
-    console.log('windows.intervals', window_intervals)
 
     document.querySelector('#overlaps').innerHTML = _.map( window_intervals, (window) => {
 
@@ -156,27 +130,6 @@ export default class extends Controller {
 
     return sunrise
   }
-
-  // dailyRuler(day_of_week){ // 1-7
-  //   ['moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'sun'][day_of_week - 1]
-  // }
-    
-
-  // planetToElement(planet){
-  //   switch (planet) {
-  //     case 'sun':
-  //     case 'mars':
-  //       return 'fire'
-  //     case 'mercury':
-  //     case 'saturn':
-  //       return 'water'
-  //     case 'venus':
-  //     case 'jupiter':
-  //       return 'air'
-  //     case 'moon':
-  //       return 'earth'
-  //   }
-  // }
 
   elementToPlanetsHTML(element){
     return _.map(this.elementToPlanets(element), (e) => {

@@ -54,7 +54,7 @@ export default class extends Controller {
     var focusonIndex
     
     var html = _.map(this.sun.intervals, (sun_interval, index) => {
-      var klass, tabIndex, h = ''
+      var klass = '', tabIndex = '', h = ''
       if( this.presentInterval == sun_interval ){
         this.presentIndex = index
         klass = 'bg-purple-400'
@@ -63,7 +63,7 @@ export default class extends Controller {
       
       h+= '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + index + '">'
       h+= '<div>'+ sun_interval.time_string + '</div>'
-      h+= '<div class="w-full">'+ this.elementsToHTML(sun_interval) + '</div>'
+      h+= '<div class="w-full">'+ this.elementsToHTML(sun_interval.elements) + '</div>'
       h+= "</div>"
       
       return h
@@ -72,7 +72,7 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval)
+    this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
     this.focus()
   }
 
@@ -82,9 +82,9 @@ export default class extends Controller {
     _.delay((el) => { el.blur() },100, activeEl)
   }
 
-  elementsToHTML(interval){
+  elementsToHTML(elements){
     var translator = this.getControllerByIdentifier('location')
-    return _.map(interval.elements, (e) => { return translator.elementToHTML(e, 'inline-block') }).join('')
+    return _.map(elements, (e) => { return translator.elementToHTML(e, 'inline-block') }).join('')
   }
 
   getControllerByIdentifier(identifier) {
