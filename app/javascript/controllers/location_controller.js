@@ -7,7 +7,6 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
 import { WindowsInTime } from 'windows-in-time';
-// var wit = require('windows-in-time')
 
 export default class extends Controller {
 
@@ -33,17 +32,18 @@ export default class extends Controller {
     // WindowsInTime is responsible for getting sunrise and sunset time, using the provided Date.
     // WindowsInTime is NOT responsible for getting the lat and lng
     
-    let windows = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
-    windows.earth.setTimes(DateTime.now()).then(() => {
-      windows.magic()
-      console.log(windows)
-      // this.toHTML(windows)
+    let windows_in_time = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
+    windows_in_time.earth.setTimes(DateTime.now()).then(() => {
+      windows_in_time.magic()
+      this.toHTML(windows_in_time)
     })
   }
 
-  toHTML( windows ) {
+  toHTML( windows_in_time ) {
 
-    console.log('toHTML', windows)
+    console.log('toHTML', windows_in_time)
+
+    this.addWindows(windows_in_time.windows.intervals)
 
     this.addTippy()
   }
@@ -68,69 +68,45 @@ export default class extends Controller {
     
   // }
 
-  findOverlaps() {
-
-    var overlaps = _.map(this.moonIntervals, (moonI) => {
-      var sunIntervals = _.filter(this.sunIntervals, (sunI) => {
-        
-        if( _.intersection(moonI.elements, sunI.elements ).length == 0 ) return
-        return sunI.interval.overlaps(moonI.interval)
-
-      })
-
-      return { moonInterval: moonI, sunIntervals: sunIntervals }
-    })
-
-    overlaps = _.filter(overlaps, (overlap) => { return overlap.sunIntervals.length > 0 })
+  addWindows(window_intervals) {
 
     var focusedOnNext = false
 
-    document.querySelector('#overlaps').innerHTML = _.map(overlaps, (overlap) => {
+    console.log('windows.intervals', window_intervals)
 
-      return _.map(overlap.sunIntervals, (sunI) => {
+    document.querySelector('#overlaps').innerHTML = _.map( window_intervals, (window) => {
 
-        var html = document.querySelector('.overlapTemplate').cloneNode(true)
+      var html = document.querySelector('.overlapTemplate').cloneNode(true)
+      var w = html.querySelector('.widget')
 
+      if( !focusedOnNext && ( window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now()) ) ){
+        w.setAttribute('tabindex', 0)
+        w.classList.add('bg-green-100')
+        w.classList.add('tabindex')
+        w.classList.remove('bg-blue-100')
+        focusedOnNext = true // yes focus here
+      }
 
-        if( !focusedOnNext ) {
-          if( sunI.interval.contains( DateTime.now() ) || sunI.interval.isAfter( DateTime.now()) ){
-            // yes focus here
-            html.querySelector('.widget').setAttribute('tabindex', 0)
-            html.querySelector('.widget').classList.add('bg-green-100')
-            html.querySelector('.widget').classList.add('tabindex')
-            html.querySelector('.widget').classList.remove('bg-blue-100')
-            focusedOnNext = true
-          }
+      html.querySelector('.sun-planet').classList.add( window.element )
+      html.querySelector('.moon-planet').classList.add( window.planet )
 
-        }
-
-        
-        html.querySelector('.sun-planet').classList.add( sunI.element )
-        html.querySelector('.moon-planet').classList.add( overlap.moonInterval.planet )
-
-        if( this.rulingPlanet == overlap.moonInterval.planet ){
-          html.querySelector('.widget').classList.remove('bg-blue-100')
-          html.querySelector('.widget').classList.add('bg-yellow-200')
-          // html.querySelector('.moon-planet').parentNode.classList.add('bg-blue-500')
-          // html.querySelector('.widget .rulingPlanet').classList.remove('hidden')
-          // html.querySelector('.widget .rulingPlanet').innerHTML = this.elementToHTML( overlap.moonInterval.planet )
-        }
-
-        var intersection = overlap.moonInterval.interval.intersection(sunI.interval)
-        html.querySelector('.start').innerHTML = intersection.start.toFormat('HH:mm')
-        html.querySelector('.end').innerHTML = intersection.end.toFormat('HH:mm')
-        html.querySelector('.length').innerHTML = intersection.length('minutes').toFixed() + 'm'
-        return html.outerHTML
-      }).join('')
+      if( window.golden ){
+        w.classList.remove('bg-blue-100')
+        w.classList.add('bg-yellow-200')
+      }
       
+      html.querySelector('.start').innerHTML = window.interval.start.toFormat('HH:mm')
+      html.querySelector('.end').innerHTML = window.interval.end.toFormat('HH:mm')
+      html.querySelector('.length').innerHTML = window.interval.length('minutes').toFixed() + 'm'
+
+      return html.outerHTML
 
     }).join('')
-
+  
     var activeEl = document.querySelector('#overlaps .tabindex')
     _.delay((el) => { el.focus() }, 300, activeEl)
     _.delay((el) => { el.blur() }, 350, activeEl)
-    // activeEl.focus()
-    
+  
   }
 
   addTippy() {
@@ -153,41 +129,6 @@ export default class extends Controller {
       Cookies.set('lng', this.lngValue)
       this.getWindowsInTime( date )
     })
-
-
-    // this.btnTarget.classList.add('hidden')
-
-    // var goFetch = () => {
-    //   var today = this.today()
-
-    //   if( Cookies.get('today') == today.toISODate() ){
-    //     _.delay(() => { // we need the delay so the controllers finish loading
-    //       this.go( DateTime.fromISO(Cookies.get('sunrise')), DateTime.fromISO(Cookies.get('sunset')) ) 
-    //     }, 10)
-
-    //     return
-    //   }
-
-    //   var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
-    //   fetch( url ).then(response => response.json()) .then((data) => { 
-        
-    //     Cookies.set('today', today.toISODate())
-    //     Cookies.set('sunrise', data.results.sunrise)
-    //     Cookies.set('sunset', data.results.sunset)
-        
-    //     this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) 
-    //   })
-    // }
-
-    // if( Cookies.get('lat') && Cookies.get('lng') ){
-    //   this.latValue = parseFloat( Cookies.get('lat') )
-    //   this.lngValue = parseFloat( Cookies.get('lng') )
-    //   goFetch()
-    // }else{
-    //   console.log('Use geoLocation')
-      
-    // }
-
 
   }
 
@@ -212,26 +153,26 @@ export default class extends Controller {
     return sunrise
   }
 
-  dailyRuler(day_of_week){ // 1-7
-    ['moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'sun'][day_of_week - 1]
-  }
+  // dailyRuler(day_of_week){ // 1-7
+  //   ['moon', 'mars', 'mercury', 'jupiter', 'venus', 'saturn', 'sun'][day_of_week - 1]
+  // }
     
 
-  planetToElement(planet){
-    switch (planet) {
-      case 'sun':
-      case 'mars':
-        return 'fire'
-      case 'mercury':
-      case 'saturn':
-        return 'water'
-      case 'venus':
-      case 'jupiter':
-        return 'air'
-      case 'moon':
-        return 'earth'
-    }
-  }
+  // planetToElement(planet){
+  //   switch (planet) {
+  //     case 'sun':
+  //     case 'mars':
+  //       return 'fire'
+  //     case 'mercury':
+  //     case 'saturn':
+  //       return 'water'
+  //     case 'venus':
+  //     case 'jupiter':
+  //       return 'air'
+  //     case 'moon':
+  //       return 'earth'
+  //   }
+  // }
 
   elementToPlanetsHTML(element){
     return _.map(this.elementToPlanets(element), (e) => {
