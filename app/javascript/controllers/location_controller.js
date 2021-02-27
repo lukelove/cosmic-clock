@@ -16,36 +16,57 @@ export default class extends Controller {
 
   initialize() {
 
+    var date = Date.now()
     
-
-    console.log('LOC WindowsInTime start', new WindowsInTime(DateTime.now(), '-8.340539', '115.091949') )
-
-    return
-
-    // var wit = new WindowsInTime(DateTime.now(), '-8.340539', '115.091949')
-    // console.log('LOC WindowsInTime end', wit)
-
-
-    if( Cookies.get('lat') && Cookies.get('lng') ){
+    if( Cookies.get('lat') != undefined && Cookies.get('lng') != undefined ){
       this.btnTarget.classList.add('hidden')
-      this.getLocation();
+      this.getWindowsInTime( date, Cookies.get('lat'), Cookies.get('lng') )
+    }else{
+      this.getLocation( date )
     }
+    
 
   }
 
-  go(sunrise, sunset) {
-    this.getControllerByIdentifier('sun').init(sunrise)
-    this.getControllerByIdentifier('moon').init(sunrise, sunset)
-    this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
-    this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
+  getWindowsInTime(date) {
 
+    // WindowsInTime is responsible for getting sunrise and sunset time, using the provided Date.
+    // WindowsInTime is NOT responsible for getting the lat and lng
     
-    this.sunIntervals = this.getControllerByIdentifier('sun').intervals
-    this.moonIntervals = this.getControllerByIdentifier('moon').intervals
-    this.findOverlaps()
+    let windows = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
+    windows.earth.setTimes(DateTime.now()).then(() => {
+      windows.magic()
+      console.log(windows)
+      // this.toHTML(windows)
+    })
+  }
+
+  toHTML( windows ) {
+
+    console.log('toHTML', windows)
 
     this.addTippy()
   }
+
+  // go(sunrise, sunset) {
+
+  //   // var windows_in_time = new WindowsInTime(DateTime.now(), '-8.340539', '115.091949')
+
+    
+  //   console.log('windows', windows)
+
+  //   // this.getControllerByIdentifier('sun').init(sunrise)
+  //   // this.getControllerByIdentifier('moon').init(sunrise, sunset)
+  //   // this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
+  //   // this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
+
+    
+  //   // this.sunIntervals = this.getControllerByIdentifier('sun').intervals
+  //   // this.moonIntervals = this.getControllerByIdentifier('moon').intervals
+  //   // this.findOverlaps()
+
+    
+  // }
 
   findOverlaps() {
 
@@ -122,46 +143,50 @@ export default class extends Controller {
     
   }
 
-  getLocation() {
+  getLocation( date ) {
 
-    this.btnTarget.classList.add('hidden')
+    console.log('getLocation')
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.latValue = position.coords.latitude;
+      this.lngValue = position.coords.longitude;
+      Cookies.set('lat', this.latValue)
+      Cookies.set('lng', this.lngValue)
+      this.getWindowsInTime( date )
+    })
 
-    var goFetch = () => {
-      var today = this.today()
 
-      if( Cookies.get('today') == today.toISODate() ){
-        _.delay(() => { // we need the delay so the controllers finish loading
-          this.go( DateTime.fromISO(Cookies.get('sunrise')), DateTime.fromISO(Cookies.get('sunset')) ) 
-        }, 10)
+    // this.btnTarget.classList.add('hidden')
 
-        return
-      }
+    // var goFetch = () => {
+    //   var today = this.today()
 
-      var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
-      fetch( url ).then(response => response.json()) .then((data) => { 
+    //   if( Cookies.get('today') == today.toISODate() ){
+    //     _.delay(() => { // we need the delay so the controllers finish loading
+    //       this.go( DateTime.fromISO(Cookies.get('sunrise')), DateTime.fromISO(Cookies.get('sunset')) ) 
+    //     }, 10)
+
+    //     return
+    //   }
+
+    //   var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
+    //   fetch( url ).then(response => response.json()) .then((data) => { 
         
-        Cookies.set('today', today.toISODate())
-        Cookies.set('sunrise', data.results.sunrise)
-        Cookies.set('sunset', data.results.sunset)
+    //     Cookies.set('today', today.toISODate())
+    //     Cookies.set('sunrise', data.results.sunrise)
+    //     Cookies.set('sunset', data.results.sunset)
         
-        this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) 
-      })
-    }
+    //     this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) 
+    //   })
+    // }
 
-    if( Cookies.get('lat') && Cookies.get('lng') ){
-      this.latValue = parseFloat( Cookies.get('lat') )
-      this.lngValue = parseFloat( Cookies.get('lng') )
-      goFetch()
-    }else{
-      console.log('Use geoLocation')
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latValue = position.coords.latitude;
-        this.lngValue = position.coords.longitude;
-        Cookies.set('lat', this.latValue)
-        Cookies.set('lng', this.lngValue)
-        goFetch()
-      })
-    }
+    // if( Cookies.get('lat') && Cookies.get('lng') ){
+    //   this.latValue = parseFloat( Cookies.get('lat') )
+    //   this.lngValue = parseFloat( Cookies.get('lng') )
+    //   goFetch()
+    // }else{
+    //   console.log('Use geoLocation')
+      
+    // }
 
 
   }
