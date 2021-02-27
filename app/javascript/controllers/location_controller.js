@@ -36,6 +36,10 @@ export default class extends Controller {
     windows_in_time.earth.setTimes(DateTime.now()).then(() => {
       windows_in_time.magic()
       this.toHTML(windows_in_time)
+      this.getControllerByIdentifier('sun').init(windows_in_time.sun)
+      // this.getControllerByIdentifier('moon').init(windows_in_time)
+
+      this.addTippy()
     })
   }
 
@@ -45,7 +49,7 @@ export default class extends Controller {
 
     this.addWindows(windows_in_time.windows.intervals)
 
-    this.addTippy()
+    
   }
 
   // go(sunrise, sunset) {
