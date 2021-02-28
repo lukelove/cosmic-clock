@@ -81,12 +81,8 @@ export default class extends Controller {
       html.classList.add('overlap')
       var w = html.querySelector('.widget')
 
-      if( earth.isToday && !focusedOnNext && ( window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now()) ) ){
-        w.setAttribute('tabindex', 0)
-        w.classList.add('bg-green-100')
-        w.classList.add('tabindex')
-        w.classList.remove('bg-blue-100')
-        focusedOnNext = true // yes focus here
+      if( earth.isToday && !(window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now() )) ){
+        w.classList.add('hidden')
       }
 
       html.querySelector('.sun-planet').classList.add( window.element )
@@ -106,22 +102,23 @@ export default class extends Controller {
 
     }).join('')
 
-    if( earth.isToday ){
-      var activeEl = document.querySelector('#overlaps .tabindex')
-      _.delay((el) => { el.focus() }, 300, activeEl)
-      _.delay((el) => { el.blur() }, 350, activeEl)
-    }
-  
   }
 
   addTippy() {
+    
+    // cleanup tippys
+    if (this.tippys == undefined) this.tippys = []
+    _.each(this.tippys, (t) => { t.destroy() })
+
+    this.tippys = []
     var elements = ["air", "water", "earth", "fire", "spirit"]
     _.each(elements, (e) => {
       _.each( _.concat(e, this.elementToPlanets(e)), (el) => {
-        tippy('.' + el, {content: _.capitalize(el)})
+        this.tippys.push( tippy('.' + el, {content: _.capitalize(el)}) )
       } )
     })
     
+    this.tippys = _.flattenDeep(this.tippys)
   }
 
   getLocation( date ) {

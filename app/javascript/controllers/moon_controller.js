@@ -13,20 +13,6 @@ export default class extends Controller {
     this.earth = earth
     this.moon = moon
     this.daily_ruler = daily_ruler
-    // var wholeDayMs = 86400000
-    // var dayMS = sunrise.diff(sunset).milliseconds * -1
-    // var nightMS = wholeDayMs - dayMS
-    // var dayIntervalLength = parseInt(dayMS/12)
-    // var nightIntervalLength = parseInt(nightMS/12)
-
-    // this.dayHourTarget.innerHTML = Duration.fromMillis(dayIntervalLength).toFormat('h:mm')
-    // this.dayLengthTarget.innerHTML = Duration.fromMillis(dayMS).toFormat('h:mm')
-    // this.nightHourTarget.innerHTML = Duration.fromMillis(nightIntervalLength).toFormat('h:mm')
-    // this.nightLengthTarget.innerHTML = Duration.fromMillis(nightMS).toFormat('h:mm')
-
-    // var dayIntervals = this.makeInterval(0, sunrise, this.offset(sunrise), dayIntervalLength)
-    // var offset = ( _.last(dayIntervals).elIndex == 6 ) ? 0 : (_.last(dayIntervals).elIndex + 1)
-    // var nightIntervals = this.makeInterval(12, sunset, offset, nightIntervalLength) 
     this.intervals = this.moon.intervals
 
     this.refreshHTML()
@@ -48,24 +34,10 @@ export default class extends Controller {
 
     if( this.earth.isToday ){
       // timer & countdown
-      new CanvasCircularCountdown(this.timerTarget, {
-        "duration": secToNextInterval * 1000,
-        "radius": 150,
-        "progressBarWidth": 15,
-        "circleBackgroundColor": "#ffffff",
-        "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
-        "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
-        "showCaption": true,
-        // "captionColor": "#343a40",
-        "captionFont": "60px sans-serif",
-        "captionText": (percentage, time, instance) => {
-          return Duration.fromMillis(time.remaining).toFormat('mm:ss')
-        },
-      }, function onTimerRunning(percentage, time, instance) {
-        // Do your stuff here while timer is running...
-      }).start()
 
-      var moonCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+      var moonCountdown = new Countdown(secToNextInterval, function(seconds) { 
+        that.timerTarget.innerHTML = Duration.fromMillis(seconds*1000).toFormat('m:ss')
+       }, function() { 
         console.log('countdown Complete, time to refresh')
         that.refreshHTML()
       });

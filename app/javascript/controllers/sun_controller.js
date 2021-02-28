@@ -27,25 +27,10 @@ export default class extends Controller {
     var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
 
     if( this.earth.isToday ){
-      // timer & countdown
-      new CanvasCircularCountdown(this.timerTarget, {
-        "duration": secToNextInterval * 1000,
-        "radius": 150,
-        "progressBarWidth": 15,
-        "circleBackgroundColor": "#ffffff",
-        "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
-        "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
-        "showCaption": true,
-        // "captionColor": "#343a40",
-        "captionFont": "60px sans-serif",
-        "captionText": (percentage, time, instance) => {
-          return Duration.fromMillis(time.remaining).toFormat('mm:ss')
-        },
-      }, function onTimerRunning(percentage, time, instance) {
-        // Do your stuff here while timer is running...
-      }).start()
 
-      var sunCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+      var sunCountdown = new Countdown(secToNextInterval, function(seconds) {
+        that.timerTarget.innerHTML = Duration.fromMillis(seconds*1000).toFormat('m:ss')
+       }, function() { 
         console.log('countdown Complete, time to refresh')
         that.refreshHTML()
       });
