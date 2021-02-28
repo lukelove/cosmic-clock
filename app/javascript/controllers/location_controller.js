@@ -36,6 +36,11 @@ export default class extends Controller {
     this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
   }
 
+  goToToday() {
+    this.date = DateTime.now()
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+  }
+
   getWindowsInTime(date) {
 
     // WindowsInTime is responsible for getting sunrise and sunset time, using the provided Date.
