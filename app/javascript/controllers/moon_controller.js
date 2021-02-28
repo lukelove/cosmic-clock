@@ -63,7 +63,7 @@ export default class extends Controller {
       var klass = '', tabIndex = '', h = ''
       if( this.presentInterval == moon_interval ){
         this.presentIndex = index
-        klass = 'bg-yellow-300'
+        klass = 'bg-yellow-200'
         tabIndex = 'tabindex="0"'
       }
       

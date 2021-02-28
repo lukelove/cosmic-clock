@@ -89,9 +89,9 @@ export default class extends Controller {
       html.querySelector('.moon-planet').classList.add( window.planet )
 
       if( window.golden ){
-        w.classList.remove('bg-blue-100')
+        w.classList.remove('bg-green-200')
         w.classList.add('golden')
-        w.classList.add('bg-yellow-200')
+        w.classList.add('bg-pink-300')
       }
       
       html.querySelector('.start').innerHTML = window.interval.start.toFormat('t')

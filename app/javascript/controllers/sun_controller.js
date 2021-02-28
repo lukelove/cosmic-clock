@@ -46,7 +46,7 @@ export default class extends Controller {
       var klass = '', tabIndex = '', h = ''
       if( this.presentInterval == sun_interval ){
         this.presentIndex = index
-        klass = 'bg-purple-400'
+        klass = 'bg-indigo-400'
         tabIndex = 'tabindex="0"'
       }
       
