@@ -94,8 +94,8 @@ export default class extends Controller {
         w.classList.add('bg-yellow-200')
       }
       
-      html.querySelector('.start').innerHTML = window.interval.start.toFormat('HH:mm')
-      html.querySelector('.end').innerHTML = window.interval.end.toFormat('HH:mm')
+      html.querySelector('.start').innerHTML = window.interval.start.toFormat('t')
+      html.querySelector('.end').innerHTML = window.interval.end.toFormat('t')
       html.querySelector('.length').innerHTML = window.interval.length('minutes').toFixed() + 'm'
 
       return html.outerHTML
