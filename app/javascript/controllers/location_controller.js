@@ -10,21 +10,30 @@ import { WindowsInTime } from 'windows-in-time';
 
 export default class extends Controller {
 
-  static targets = [ "btn", "sunrise", "sunset" ]
+  static targets = [ "btn", "sunrise", "sunset", "date" ]
   static values = { lat: Number, lng: Number }
 
   initialize() {
 
-    var date = Date.now()
+    this.date = DateTime.now()
     
     if( Cookies.get('lat') != undefined && Cookies.get('lng') != undefined ){
       this.btnTarget.classList.add('hidden')
-      this.getWindowsInTime( date, Cookies.get('lat'), Cookies.get('lng') )
+      this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
     }else{
-      this.getLocation( date )
+      this.getLocation( this.date )
     }
-    
 
+  }
+
+  nextDay() {
+    this.date = this.date.plus({days: 1})
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+  }
+  
+  previousDay() {
+    this.date = this.date.minus({days: 1})
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
   }
 
   getWindowsInTime(date) {
@@ -33,31 +42,31 @@ export default class extends Controller {
     // WindowsInTime is NOT responsible for getting the lat and lng
     
     let windows_in_time = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
-    windows_in_time.earth.setTimes(DateTime.now()).then(() => {
+    windows_in_time.earth.setTimes(this.date).then(() => {
       windows_in_time.magic()
-      this.toHTML(windows_in_time)
-      this.getControllerByIdentifier('sun').init(windows_in_time.sun)
-      this.getControllerByIdentifier('moon').init(windows_in_time.moon, windows_in_time.earth.daily_ruler)
+      this.addWindows(windows_in_time.windows.intervals, windows_in_time.earth.isToday)
+      this.getControllerByIdentifier('sun').init(windows_in_time.earth, windows_in_time.sun)
+      this.getControllerByIdentifier('moon').init(windows_in_time.earth, windows_in_time.moon, windows_in_time.earth.daily_ruler)
+
+
+      this.dateTarget.innerHTML = windows_in_time.earth.sunrise.toFormat("ccc LLL dd")
+      this.dateTarget.setAttribute('data-date', windows_in_time.earth.sunrise.toISODate() )
 
       this.addTippy()
     })
   }
 
-  toHTML( windows_in_time ) {
-    console.log('toHTML', windows_in_time)
-    this.addWindows(windows_in_time.windows.intervals)
-  }
-
-  addWindows(window_intervals) {
+  addWindows(window_intervals, isToday) {
 
     var focusedOnNext = false
 
     document.querySelector('#overlaps').innerHTML = _.map( window_intervals, (window) => {
 
       var html = document.querySelector('.overlapTemplate').cloneNode(true)
+      html.classList.remove('hidden')
       var w = html.querySelector('.widget')
 
-      if( !focusedOnNext && ( window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now()) ) ){
+      if( isToday && !focusedOnNext && ( window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now()) ) ){
         w.setAttribute('tabindex', 0)
         w.classList.add('bg-green-100')
         w.classList.add('tabindex')
@@ -80,10 +89,12 @@ export default class extends Controller {
       return html.outerHTML
 
     }).join('')
-  
-    var activeEl = document.querySelector('#overlaps .tabindex')
-    _.delay((el) => { el.focus() }, 300, activeEl)
-    _.delay((el) => { el.blur() }, 350, activeEl)
+
+    if( isToday ){
+      var activeEl = document.querySelector('#overlaps .tabindex')
+      _.delay((el) => { el.focus() }, 300, activeEl)
+      _.delay((el) => { el.blur() }, 350, activeEl)
+    }
   
   }
 
@@ -108,27 +119,6 @@ export default class extends Controller {
       this.getWindowsInTime( date )
     })
 
-  }
-
-  today(){
- 
-    // if now is after sunrise, use today
-    // if now is before sunrise, use yesterday
-
-    var times = SunCalc.getTimes(new Date(), this.latValue, this.lngValue);
-    var sunrise = DateTime.fromISO(times.sunrise.toISOString())
-
-    if( DateTime.now() < sunrise ){
-      console.log("using Yesterday's Sunrise")
-      var d = new Date();
-      d.setDate(d.getDate() - 1);
-      times = SunCalc.getTimes(d, this.latValue, this.lngValue);
-      sunrise = DateTime.fromISO(times.sunrise.toISOString())
-    }
-
-    this.rulingPlanet = this.dailyRuler(parseInt(sunrise.toFormat('c')))
-
-    return sunrise
   }
 
   elementToPlanetsHTML(element){

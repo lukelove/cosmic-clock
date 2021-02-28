@@ -9,9 +9,10 @@ export default class extends Controller {
                      "timer", "elementBlocks", "rulingPlanet"]
   static values = { appLoaded: Number }
   
-  init(moon, daily_ruler) {
-    this.daily_ruler = daily_ruler
+  init(earth, moon, daily_ruler) {
+    this.earth = earth
     this.moon = moon
+    this.daily_ruler = daily_ruler
     // var wholeDayMs = 86400000
     // var dayMS = sunrise.diff(sunset).milliseconds * -1
     // var nightMS = wholeDayMs - dayMS
@@ -45,28 +46,31 @@ export default class extends Controller {
     var nextInterval = _.find(this.moon.intervals, (interval, index) => { return (index == this.presentIndex + 1) })
     var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
 
-    // timer & countdown
-    new CanvasCircularCountdown(this.timerTarget, {
-      "duration": secToNextInterval * 1000,
-      "radius": 150,
-      "progressBarWidth": 15,
-      "circleBackgroundColor": "#ffffff",
-      "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
-      "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
-      "showCaption": true,
-      // "captionColor": "#343a40",
-      "captionFont": "60px sans-serif",
-      "captionText": (percentage, time, instance) => {
-        return Duration.fromMillis(time.remaining).toFormat('mm:ss')
-      },
-    }, function onTimerRunning(percentage, time, instance) {
-      // Do your stuff here while timer is running...
-    }).start()
+    if( this.earth.isToday ){
+      // timer & countdown
+      new CanvasCircularCountdown(this.timerTarget, {
+        "duration": secToNextInterval * 1000,
+        "radius": 150,
+        "progressBarWidth": 15,
+        "circleBackgroundColor": "#ffffff",
+        "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
+        "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
+        "showCaption": true,
+        // "captionColor": "#343a40",
+        "captionFont": "60px sans-serif",
+        "captionText": (percentage, time, instance) => {
+          return Duration.fromMillis(time.remaining).toFormat('mm:ss')
+        },
+      }, function onTimerRunning(percentage, time, instance) {
+        // Do your stuff here while timer is running...
+      }).start()
 
-    var moonCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
-      console.log('countdown Complete, time to refresh')
-      that.refreshHTML()
-    });
+      var moonCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+        console.log('countdown Complete, time to refresh')
+        that.refreshHTML()
+      });
+
+    }
   }
 
 
@@ -104,10 +108,11 @@ export default class extends Controller {
 
     this.timeNowStrTarget.innerHTML = html
 
-    // Element Blocks beside the TItle
-    this.elementBlocksTarget.innerHTML = this.elementsToHTML( this.presentInterval )
-    
-    this.focus()
+    if( this.presentInterval ){
+      // Element Blocks beside the TItle
+      this.elementBlocksTarget.innerHTML = this.elementsToHTML( this.presentInterval )
+      this.focus()
+    }
         
   }
 

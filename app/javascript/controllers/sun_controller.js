@@ -8,7 +8,8 @@ export default class extends Controller {
   static targets = [ "timeNowStr", "timer", "elementBlocks" ]
   static values = { appLoaded: Number }
 
-  init(sun) {
+  init(earth, sun) {
+    this.earth = earth
     this.sun = sun
     this.refreshHTML()
   }
@@ -25,28 +26,31 @@ export default class extends Controller {
     var nextInterval = _.find(this.sun.intervals, (interval, index) => { return (index == this.presentIndex + 1) })
     var secToNextInterval = parseInt( DateTime.now().diff( nextInterval.interval.start ).toFormat('s') * -1 )
 
-    // timer & countdown
-    new CanvasCircularCountdown(this.timerTarget, {
-      "duration": secToNextInterval * 1000,
-      "radius": 150,
-      "progressBarWidth": 15,
-      "circleBackgroundColor": "#ffffff",
-      "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
-      "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
-      "showCaption": true,
-      // "captionColor": "#343a40",
-      "captionFont": "60px sans-serif",
-      "captionText": (percentage, time, instance) => {
-        return Duration.fromMillis(time.remaining).toFormat('mm:ss')
-      },
-    }, function onTimerRunning(percentage, time, instance) {
-      // Do your stuff here while timer is running...
-    }).start()
+    if( this.earth.isToday ){
+      // timer & countdown
+      new CanvasCircularCountdown(this.timerTarget, {
+        "duration": secToNextInterval * 1000,
+        "radius": 150,
+        "progressBarWidth": 15,
+        "circleBackgroundColor": "#ffffff",
+        "emptyProgressBarBackgroundColor": "rgba(52, 211, 153)",
+        "filledProgressBarBackgroundColor": "rgb(139, 92, 246)",
+        "showCaption": true,
+        // "captionColor": "#343a40",
+        "captionFont": "60px sans-serif",
+        "captionText": (percentage, time, instance) => {
+          return Duration.fromMillis(time.remaining).toFormat('mm:ss')
+        },
+      }, function onTimerRunning(percentage, time, instance) {
+        // Do your stuff here while timer is running...
+      }).start()
 
-    var sunCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
-      console.log('countdown Complete, time to refresh')
-      that.refreshHTML()
-    });
+      var sunCountdown = new Countdown(secToNextInterval, function(seconds) { return }, function() { 
+        console.log('countdown Complete, time to refresh')
+        that.refreshHTML()
+      });
+
+    }
   }
 
   toHTML(){
@@ -72,8 +76,10 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
-    this.focus()
+    if( this.presentInterval ){
+      this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
+      this.focus()
+    }
   }
 
   focus() {
