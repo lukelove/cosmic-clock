@@ -16,71 +16,98 @@ $symbol-height: 25px;
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .water {
   background-image: asset-url("alchemical/water.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .fire {
   background-image: asset-url("alchemical/fire.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .earth {
   background-image: asset-url("alchemical/earth.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .spirit {
   background-image: asset-url("alchemical/spirit.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .moon {
   background-image: asset-url("alchemical/moon.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .venus {
   background-image: asset-url("alchemical/venus.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .mercury {
   background-image: asset-url("alchemical/mercury.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .saturn {
   background-image: asset-url("alchemical/saturn.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .jupiter {
   background-image: asset-url("alchemical/jupiter.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .mars {
   background-image: asset-url("alchemical/mars.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 .sun {
   background-image: asset-url("alchemical/sun.svg");
   background-repeat: no-repeat;
   width: $symbol-width;
   height: $symbol-width;
+  background-position-x: center;
+  background-position-y: center;
 }
 
+.half-sized-element {
+  background-size: 50%;
+}
