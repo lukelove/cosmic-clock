@@ -6,208 +6,132 @@ import Cookies from "js-cookie";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
+import { WindowsInTime } from 'windows-in-time';
+
 export default class extends Controller {
 
-  static targets = [ "btn", "sunrise", "sunset" ]
+  static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn" ]
   static values = { lat: Number, lng: Number }
 
   initialize() {
 
-    if( Cookies.get('lat') && Cookies.get('lng') ){
+    this.date = DateTime.now()
+    
+    if( Cookies.get('lat') != undefined && Cookies.get('lng') != undefined ){
       this.btnTarget.classList.add('hidden')
-      this.getLocation();
+      this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+    }else{
+      this.getLocation( this.date )
     }
 
   }
 
-  go(sunrise, sunset) {
-    this.getControllerByIdentifier('sun').init(sunrise)
-    this.getControllerByIdentifier('moon').init(sunrise, sunset)
-    this.sunriseTarget.innerHTML = sunrise.toLocaleString(DateTime.DATETIME_SHORT)
-    this.sunsetTarget.innerHTML = sunset.toLocaleString(DateTime.DATETIME_SHORT)
-
-    
-    this.sunIntervals = this.getControllerByIdentifier('sun').intervals
-    this.moonIntervals = this.getControllerByIdentifier('moon').intervals
-    this.findOverlaps()
-
-    this.addTippy()
+  nextDay() {
+    this.date = this.date.plus({days: 1})
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+  }
+  
+  previousDay() {
+    this.date = this.date.minus({days: 1})
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
   }
 
-  findOverlaps() {
+  goToToday() {
+    this.date = DateTime.now()
+    this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+  }
 
-    var overlaps = _.map(this.moonIntervals, (moonI) => {
-      var sunIntervals = _.filter(this.sunIntervals, (sunI) => {
-        
-        if( _.intersection(moonI.elements, sunI.elements ).length == 0 ) return
-        return sunI.interval.overlaps(moonI.interval)
+  getWindowsInTime(date) {
 
-      })
+    // WindowsInTime is responsible for getting sunrise and sunset time, using the provided Date.
+    // WindowsInTime is NOT responsible for getting the lat and lng
+    
+    let windows_in_time = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
+    windows_in_time.earth.setTimes(this.date).then(() => {
+      windows_in_time.magic()
+      this.addWindows(windows_in_time.windows.intervals, windows_in_time.earth)
+      this.getControllerByIdentifier('sun').init(windows_in_time.earth, windows_in_time.sun)
+      this.getControllerByIdentifier('moon').init(windows_in_time.earth, windows_in_time.moon, windows_in_time.earth.daily_ruler)
 
-      return { moonInterval: moonI, sunIntervals: sunIntervals }
+
+      this.dateTarget.innerHTML = windows_in_time.earth.sunrise.toFormat("ccc LLL dd")
+      this.dateTarget.setAttribute('data-date', windows_in_time.earth.sunrise.toISODate() )
+
+      this.addTippy()
     })
+  }
 
-    overlaps = _.filter(overlaps, (overlap) => { return overlap.sunIntervals.length > 0 })
+  addWindows(window_intervals, earth) {
 
     var focusedOnNext = false
 
-    document.querySelector('#overlaps').innerHTML = _.map(overlaps, (overlap) => {
+    if( this.windowRulerBtnTarget.getAttribute('data-init') == '1' ){
+      var cl = this.windowRulerBtnTarget.classList
+      var lastClass = this.windowRulerBtnTarget.classList[cl.length - 1]
+      cl.remove(lastClass)
+    }
+    this.windowRulerBtnTarget.setAttribute('data-init', '1')
+    this.windowRulerBtnTarget.classList.add(earth.daily_ruler)
+    
+    document.querySelector('#overlaps').innerHTML = _.map( window_intervals, (window) => {
 
-      return _.map(overlap.sunIntervals, (sunI) => {
+      var html = document.querySelector('.overlapTemplate').cloneNode(true)
+      html.classList.remove('overlapTemplate')
+      html.classList.remove('hidden')
+      html.classList.add('overlap')
+      var w = html.querySelector('.widget')
 
-        var html = document.querySelector('.overlapTemplate').cloneNode(true)
+      if( earth.isToday && !(window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now() )) ){
+        w.classList.add('hidden')
+      }
 
+      html.querySelector('.sun-planet').classList.add( window.element )
+      html.querySelector('.moon-planet').classList.add( window.planet )
 
-        if( !focusedOnNext ) {
-          if( sunI.interval.contains( DateTime.now() ) || sunI.interval.isAfter( DateTime.now()) ){
-            // yes focus here
-            html.querySelector('.widget').setAttribute('tabindex', 0)
-            html.querySelector('.widget').classList.add('bg-green-100')
-            html.querySelector('.widget').classList.add('tabindex')
-            html.querySelector('.widget').classList.remove('bg-blue-100')
-            focusedOnNext = true
-          }
-
-        }
-
-        
-        html.querySelector('.sun-planet').classList.add( sunI.element )
-        html.querySelector('.moon-planet').classList.add( overlap.moonInterval.planet )
-
-        if( this.rulingPlanet == overlap.moonInterval.planet ){
-          html.querySelector('.widget').classList.remove('bg-blue-100')
-          html.querySelector('.widget').classList.add('bg-yellow-200')
-          // html.querySelector('.moon-planet').parentNode.classList.add('bg-blue-500')
-          // html.querySelector('.widget .rulingPlanet').classList.remove('hidden')
-          // html.querySelector('.widget .rulingPlanet').innerHTML = this.elementToHTML( overlap.moonInterval.planet )
-        }
-
-        var intersection = overlap.moonInterval.interval.intersection(sunI.interval)
-        html.querySelector('.start').innerHTML = intersection.start.toFormat('HH:mm')
-        html.querySelector('.end').innerHTML = intersection.end.toFormat('HH:mm')
-        html.querySelector('.length').innerHTML = intersection.length('minutes').toFixed() + 'm'
-        return html.outerHTML
-      }).join('')
+      if( window.golden ){
+        w.classList.remove('bg-blue-100')
+        w.classList.add('golden')
+        w.classList.add('bg-yellow-200')
+      }
       
+      html.querySelector('.start').innerHTML = window.interval.start.toFormat('HH:mm')
+      html.querySelector('.end').innerHTML = window.interval.end.toFormat('HH:mm')
+      html.querySelector('.length').innerHTML = window.interval.length('minutes').toFixed() + 'm'
+
+      return html.outerHTML
 
     }).join('')
 
-    var activeEl = document.querySelector('#overlaps .tabindex')
-    _.delay((el) => { el.focus() }, 300, activeEl)
-    _.delay((el) => { el.blur() }, 350, activeEl)
-    // activeEl.focus()
-    
   }
 
   addTippy() {
+    
+    // cleanup tippys
+    if (this.tippys == undefined) this.tippys = []
+    _.each(this.tippys, (t) => { t.destroy() })
+
+    this.tippys = []
     var elements = ["air", "water", "earth", "fire", "spirit"]
     _.each(elements, (e) => {
       _.each( _.concat(e, this.elementToPlanets(e)), (el) => {
-        tippy('.' + el, {content: _.capitalize(el)})
+        this.tippys.push( tippy('.' + el, {content: _.capitalize(el)}) )
       } )
     })
     
+    this.tippys = _.flattenDeep(this.tippys)
   }
 
-  getLocation() {
+  getLocation( date ) {
 
-    this.btnTarget.classList.add('hidden')
+    console.log('getLocation')
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.latValue = position.coords.latitude;
+      this.lngValue = position.coords.longitude;
+      Cookies.set('lat', this.latValue)
+      Cookies.set('lng', this.lngValue)
+      this.getWindowsInTime( date )
+    })
 
-    var goFetch = () => {
-      var today = this.today()
-
-      if( Cookies.get('today') == today.toISODate() ){
-        _.delay(() => { // we need the delay so the controllers finish loading
-          this.go( DateTime.fromISO(Cookies.get('sunrise')), DateTime.fromISO(Cookies.get('sunset')) ) 
-        }, 10)
-
-        return
-      }
-
-      var url = ['https://api.sunrise-sunset.org/json?lat=', this.latValue, '&lng=', this.lngValue, '&date=', today.toISODate(),'&formatted=0'].join('')
-      fetch( url ).then(response => response.json()) .then((data) => { 
-        
-        Cookies.set('today', today.toISODate())
-        Cookies.set('sunrise', data.results.sunrise)
-        Cookies.set('sunset', data.results.sunset)
-        
-        this.go( DateTime.fromISO(data.results.sunrise), DateTime.fromISO(data.results.sunset) ) 
-      })
-    }
-
-    if( Cookies.get('lat') && Cookies.get('lng') ){
-      this.latValue = parseFloat( Cookies.get('lat') )
-      this.lngValue = parseFloat( Cookies.get('lng') )
-      goFetch()
-    }else{
-      console.log('Use geoLocation')
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latValue = position.coords.latitude;
-        this.lngValue = position.coords.longitude;
-        Cookies.set('lat', this.latValue)
-        Cookies.set('lng', this.lngValue)
-        goFetch()
-      })
-    }
-
-
-  }
-
-  today(){
- 
-    // if now is after sunrise, use today
-    // if now is before sunrise, use yesterday
-
-    var times = SunCalc.getTimes(new Date(), this.latValue, this.lngValue);
-    var sunrise = DateTime.fromISO(times.sunrise.toISOString())
-
-    if( DateTime.now() < sunrise ){
-      console.log("using Yesterday's Sunrise")
-      var d = new Date();
-      d.setDate(d.getDate() - 1);
-      times = SunCalc.getTimes(d, this.latValue, this.lngValue);
-      sunrise = DateTime.fromISO(times.sunrise.toISOString())
-    }
-
-    this.rulingPlanet = this.dailyRuler(parseInt(sunrise.toFormat('c')))
-
-    return sunrise
-  }
-
-  dailyRuler(day_of_week){
-    switch (day_of_week) {
-      case 1: //monday
-        return 'moon'
-      case 2:
-        return 'mars'
-      case 3:
-        return 'mercury'
-      case 4:
-        return 'jupiter'
-      case 5:
-        return 'venus'
-      case 6:
-        return 'saturn'
-      case 7:
-        return 'sun'
-    }
-  }
-    
-
-  planetToElement(planet){
-    switch (planet) {
-      case 'sun':
-      case 'mars':
-        return 'fire'
-      case 'mercury':
-      case 'saturn':
-        return 'water'
-      case 'venus':
-      case 'jupiter':
-        return 'air'
-      case 'moon':
-        return 'earth'
-    }
   }
 
   elementToPlanetsHTML(element){
@@ -239,5 +163,11 @@ export default class extends Controller {
     });
   }
 
+
+  showWindow(event) {
+    var element = event.currentTarget.getAttribute('data-actor')
+    _.each(document.querySelectorAll('#overlaps .overlap'), (o) => { o.classList.add('hidden') })
+    _.each(document.querySelectorAll('#overlaps .' + element), (o) => { o.closest('.overlap').classList.remove('hidden') })
+  }
 
 }

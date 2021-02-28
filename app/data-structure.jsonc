@@ -1,0 +1,39 @@
+{
+  "earth": {
+    "lat": 12.313,
+    "lng": 123.123,
+    "datetime": DateTime.now(),
+    "sunrise": DateTime,
+    "sunset": DateTime,
+    "now": Interval,
+    "daily_ruler": "saturn",
+    "overlaps": [
+      {
+        "moonInterval": MoonInterval,
+        "sunIntervals": SunInterval
+      }
+    ]
+  },
+  "sun": {
+    "intervals": [
+      SunInterval: {
+        "interval": Interval,
+        "element": "gamma", //currenty called elIndex and a number instead of a string
+        "planets": [String, String],
+        "time_string": String,
+        "tags": element & planets,
+      },
+    ]
+  },
+  "moon": {
+    "intervals": [
+      MoonInterval {
+        "interval": Interval,
+        "element": "gamma", //currenty called elIndex and a number instead of a string
+        "planet": String,
+        "time_string": String,
+        "tags": element & planets,
+      },
+    ]
+  }
+}
