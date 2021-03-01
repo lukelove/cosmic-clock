@@ -20,4 +20,8 @@ export default class extends Controller {
     _.each(classes, (c) => { btns[this.glide.index].classList.add(c) })
    }
 
+   go(event){
+     this.glide.go( '=' + event.currentTarget.getAttribute('data-actor') )
+   }
+
 }

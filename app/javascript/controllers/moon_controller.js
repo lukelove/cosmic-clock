@@ -67,7 +67,7 @@ export default class extends Controller {
         tabIndex = 'tabindex="0"'
       }
       
-      var h = '<div class="' + klass + ' p-2 grid grid-cols-2" '+ tabIndex + ' id="moon-i-' + index + '">'
+      var h = '<div class="' + klass + 'border-b-2 border-yellow-200 p-4 grid grid-cols-2 gap-4" '+ tabIndex + ' id="moon-i-' + index + '">'
       h+= '<div class="w-full inline-flex">'
         h+= '<div class="inline-block w-16 mr-4">'+ (index + 1) + ' h</div>'
         h+= '<div class="inline-block w-full">'+ moon_interval.time_string + '</div>'

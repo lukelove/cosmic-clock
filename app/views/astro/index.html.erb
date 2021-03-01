@@ -6,21 +6,21 @@
 
 
 
-  <div data-controller="glide" data-glide-class="glide-main" class="flex flex-col w-full space-x-2 space-y-0 overflow-y-auto max-h-96">
+  <div data-controller="glide" data-glide-class="glide-main" class="flex flex-col w-full space-x-2 space-y-0">
 
     <div class="clear-both"></div>
     <nav data-glide-target="nav" class="flex flex-row pl-4 pr-6 py-2 glide-nav">
-      <button class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+      <button data-actor="0" data-action="click->glide#go" class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
         Windows
       </button>
-      <button class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+      <button data-actor="1" data-action="click->glide#go" class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
         Tattvas
       </button>
-      <button class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+      <button data-actor="2" data-action="click->glide#go" class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
         Planetary Hours
       </button>
     </nav>
-    <div class="glide-main pl-4 pr-6 py-2">
+    <div class="glide-main pl-4 pr-6 py-2 overflow-y-auto max-h-96">
       <div class="glide__track" data-glide-el="track">
         <ul class="glide__slides">
           <li class="glide__slide">
@@ -44,10 +44,10 @@
     <h2 class="flex flex-col items-center justify-center pt-5 text-lg font-bold">Descriptions</h2>
     <div class="clear-both"></div>
     <nav data-glide-target="nav" class="flex flex-row pl-4 pr-6 py-2 glide-nav">
-      <button class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+      <button data-actor="0" data-action="click->glide#go" class="text-gray-600 w-1/2 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
         Elements
       </button>
-      <button class="text-gray-600 w-1/3 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+      <button data-actor="1" data-action="click->glide#go" class="text-gray-600 w-1/2 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
         Planets
       </button>
     </nav>
