@@ -61,10 +61,10 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    if( this.presentInterval ){
-      this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
-      this.focus()
-    }
+    // if( this.presentInterval ){
+    //   this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
+    //   this.focus()
+    // }
   }
 
   focus() {
