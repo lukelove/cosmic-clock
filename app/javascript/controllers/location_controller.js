@@ -7,11 +7,6 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
 import { WindowsInTime } from 'windows-in-time';
-
-import Glide from '@glidejs/glide'
-
-
-
 export default class extends Controller {
 
   static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn" ]
@@ -28,26 +23,7 @@ export default class extends Controller {
       this.getLocation( this.date )
     }
 
-    this.glide()
-
   }
-
-  glide() {
-    var g = new Glide('.glide')
-    g.on(['swipe.end'], (x) => { this.glideNav(g) })
-    g.mount()
-    this.glideNav(g)
-  }
-
-  glideNav(g) {
-    var classes = ["text-blue-500", "border-b-2", "font-medium", "border-blue-500"]
-    var btns = document.querySelectorAll('.glide-nav button')
-    _.each(btns, (btn, i) => { _.each(classes, (c) => { btn.classList.remove(c) }) })
-    _.each(classes, (c) => { btns[g.index].classList.add(c) })
-  }
-
-  
-
 
   nextDay() {
     this.date = this.date.plus({days: 1})
