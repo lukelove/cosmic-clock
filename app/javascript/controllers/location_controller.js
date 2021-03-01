@@ -7,7 +7,6 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 
 import { WindowsInTime } from 'windows-in-time';
-
 export default class extends Controller {
 
   static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn" ]
@@ -37,7 +36,7 @@ export default class extends Controller {
   }
 
   goToToday() {
-    this.date = DateTime.now()
+    // reloads the current windows in time
     this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
   }
 
@@ -52,7 +51,6 @@ export default class extends Controller {
       this.addWindows(windows_in_time.windows.intervals, windows_in_time.earth)
       this.getControllerByIdentifier('sun').init(windows_in_time.earth, windows_in_time.sun)
       this.getControllerByIdentifier('moon').init(windows_in_time.earth, windows_in_time.moon, windows_in_time.earth.daily_ruler)
-
 
       this.dateTarget.innerHTML = windows_in_time.earth.sunrise.toFormat("ccc LLL dd")
       this.dateTarget.setAttribute('data-date', windows_in_time.earth.sunrise.toISODate() )
@@ -73,7 +71,7 @@ export default class extends Controller {
     this.windowRulerBtnTarget.setAttribute('data-init', '1')
     this.windowRulerBtnTarget.classList.add(earth.daily_ruler)
     
-    document.querySelector('#overlaps').innerHTML = _.map( window_intervals, (window) => {
+    document.querySelector('#overlaps').innerHTML = '<div class="clear-both"></div>' + _.map( window_intervals, (window) => {
 
       var html = document.querySelector('.overlapTemplate').cloneNode(true)
       html.classList.remove('overlapTemplate')
@@ -82,16 +80,16 @@ export default class extends Controller {
       var w = html.querySelector('.widget')
 
       if( earth.isToday && !(window.interval.contains( DateTime.now() ) || window.interval.isAfter( DateTime.now() )) ){
-        w.classList.add('hidden')
+        w.closest('.overlap').classList.add('hidden')
       }
 
       html.querySelector('.sun-planet').classList.add( window.element )
       html.querySelector('.moon-planet').classList.add( window.planet )
 
       if( window.golden ){
-        w.classList.remove('bg-blue-100')
+        w.classList.remove('bg-green-200')
         w.classList.add('golden')
-        w.classList.add('bg-yellow-200')
+        w.classList.add('bg-pink-300')
       }
       
       html.querySelector('.start').innerHTML = window.interval.start.toFormat('t')

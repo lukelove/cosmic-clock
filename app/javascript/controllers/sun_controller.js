@@ -46,13 +46,13 @@ export default class extends Controller {
       var klass = '', tabIndex = '', h = ''
       if( this.presentInterval == sun_interval ){
         this.presentIndex = index
-        klass = 'bg-purple-400'
+        klass = 'bg-indigo-400'
         tabIndex = 'tabindex="0"'
       }
       
-      h+= '<div class="' + klass + ' p-2 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + index + '">'
-      h+= '<div>'+ sun_interval.time_string + '</div>'
-      h+= '<div class="w-full">'+ this.elementsToHTML(sun_interval.elements) + '</div>'
+      h+= '<div class="' + klass + ' border-b-2 border-indigo-400 p-4 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + index + '">'
+        h+= '<div class="mr-3">'+ sun_interval.time_string + '</div>'
+        h+= '<div class="text-left">'+ this.elementsToHTML(sun_interval.elements) + '</div>'
       h+= "</div>"
       
       return h
@@ -61,10 +61,10 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    if( this.presentInterval ){
-      this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
-      this.focus()
-    }
+    // if( this.presentInterval ){
+    //   this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
+    //   this.focus()
+    // }
   }
 
   focus() {

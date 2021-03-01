@@ -1,17 +1,15 @@
-<div data-controller="sun" class="p-3 w-full md:w-1/2 h-full relative" data-app-loaded-value="0">
-  <div
-    class="flex items-center bg-yellow-400 bg-left rounded-3xl flex-col justify-center m-0 max-w-5xl pb-10 pl-5 pr-5 pt-10 space-y-4 text-center w-full"
-  >
+<div data-controller="sun" class="p-3 mr-10 relative" data-app-loaded-value="0">
+  <div class="flex items-center bg-yellow-100 bg-left rounded-3xl flex-col justify-center pb-10 pt-2 text-center w-full" >
+
     <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
-    <div class="absolute top-10 left-10" data-sun-target="timer"></div>
-    <div class="w-4/5">
+    <div class="w-full">
       <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Tattvas</div>
       <div data-sun-target="elementBlocks" class="pt-4"></div>
       <hr class="m-2" />
     </div>
-    <p class="font-medium overflow-y-auto w-4/5 h-32 text-left" data-sun-target="timeNowStr">
+    <div class="w-full lg:w-2/5 font-medium overflow-y-auto h-60" data-sun-target="timeNowStr">
       Wherever you go, no matter what the weather, always bring your own sunshine
-    </p>
+    </div>
     <div class="text-xs w-full pt-10 hidden">
       <div class="grid grid-cols-3 gap-1">
         <span>Sunrise: </span>
