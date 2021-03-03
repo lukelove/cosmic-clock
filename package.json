@@ -9,7 +9,6 @@
     "@rails/webpacker": "5.2.1",
     "autoprefixer": "^9",
     "canvas-circular-countdown": "^1.5.0",
-    "countdown.js": "https://github.com/gumroad/countdown.js.git",
     "google-calendar-url": "^0.0.5",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
