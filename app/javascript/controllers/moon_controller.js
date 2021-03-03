@@ -1,7 +1,6 @@
 import { Controller } from 'stimulus'; 
 import { DateTime, Duration, Interval } from "luxon";
-var Countdown = require('countdown.js');
-import CanvasCircularCountdown from 'canvas-circular-countdown';
+// var Countdown = require('countdown.js');
 
 export default class extends Controller {
 
@@ -35,12 +34,12 @@ export default class extends Controller {
     if( this.earth.isToday ){
       // timer & countdown
 
-      var moonCountdown = new Countdown(secToNextInterval, function(seconds) { 
-        that.timerTarget.innerHTML = Duration.fromMillis(seconds*1000).toFormat('m:ss')
-       }, function() { 
-        console.log('countdown Complete, time to refresh')
-        that.refreshHTML()
-      });
+      // var moonCountdown = new Countdown(secToNextInterval, function(seconds) { 
+      //   that.timerTarget.innerHTML = Duration.fromMillis(seconds*1000).toFormat('m:ss')
+      //  }, function() { 
+      //   console.log('countdown Complete, time to refresh')
+      //   that.refreshHTML()
+      // });
 
     }
   }
