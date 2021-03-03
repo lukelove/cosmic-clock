@@ -3426,7 +3426,7 @@ globule@^1.0.0:
 
 google-calendar-url@^0.0.5:
   version "0.0.5"
-  resolved "https://registry.yarnpkg.com/google-calendar-url/-/google-calendar-url-0.0.5.tgz#05ecd76a4d7073976c4d72fe7da3f344cbc662ce"
+  resolved "https://registry.yarnpkg.com/google-calendar-url/-/google-calendar-url-0.0.5.tgz"
   integrity sha512-wrKZTMDBbz2AOf1+aGN+xeKWc9FjTF/ZkOmeC7dkv/vixG48FLermpBRU1nYGK/3Z24G2QqGjcn22Fyc1Yn9Ng==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0:
@@ -7825,6 +7825,10 @@ wide-align@^1.1.0:
   integrity sha512-QGkOQc8XL6Bt5PwnsExKBPuMKBxnGxWWW3fU55Xt4feHozMUhdUMaBCk290qpm/wG5u/RSKzwdAC4i51YigihA==
   dependencies:
     string-width "^1.0.2 || 2"
+
+"windows-in-time@https://github.com/lukelove/windows-in-time.git":
+  version "1.0.0"
+  resolved "https://github.com/lukelove/windows-in-time.git#37787bb5654457db4c053e42f503cfc470f66886"
 
 worker-farm@^1.7.0:
   version "1.7.0"

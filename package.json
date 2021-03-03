@@ -24,6 +24,7 @@
   "version": "0.1.0",
   "devDependencies": {
     "ip": "^1.1.5",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "windows-in-time": "https://github.com/lukelove/windows-in-time.git"
   }
 }
