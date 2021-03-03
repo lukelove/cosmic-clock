@@ -9,7 +9,6 @@
     "@rails/webpacker": "5.2.1",
     "autoprefixer": "^9",
     "canvas-circular-countdown": "^1.5.0",
-    "countdown.js": "https://github.com/gumroad/countdown.js.git",
     "google-calendar-url": "^0.0.5",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
@@ -19,9 +18,13 @@
     "suncalc": "^1.8.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tippy.js": "^6.2.7",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "windows-in-time": "github:lukelove/windows-in-time"
   },
   "version": "0.1.0",
+  "engines": {
+    "node": "15.x"
+  },
   "devDependencies": {
     "ip": "^1.1.5",
     "webpack-dev-server": "^3.11.2"

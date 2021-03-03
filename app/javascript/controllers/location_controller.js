@@ -1,7 +1,6 @@
 import { Controller } from 'stimulus';
 var SunCalc = require('suncalc');
 import { DateTime } from "luxon";
-var Countdown = require('countdown.js');
 import Cookies from "js-cookie";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
