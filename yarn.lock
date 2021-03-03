@@ -2209,7 +2209,7 @@ cosmiconfig@^6.0.0:
 
 "countdown.js@https://github.com/gumroad/countdown.js.git":
   version "1.1.0"
-  resolved "git+ssh://git@github.com/gumroad/countdown.js.git#9ddcd60500d687841769df1b4be3d6e3e4422683"
+  resolved "https://github.com/gumroad/countdown.js.git#9ddcd60500d687841769df1b4be3d6e3e4422683"
 
 create-ecdh@^4.0.0:
   version "4.0.4"
