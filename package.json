@@ -19,15 +19,15 @@
     "suncalc": "^1.8.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tippy.js": "^6.2.7",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "windows-in-time": "github:lukelove/windows-in-time"
   },
   "version": "0.1.0",
   "engines": {
-    "yarn": "1.x"
+    "node": "15.x"
   },
   "devDependencies": {
     "ip": "^1.1.5",
-    "webpack-dev-server": "^3.11.2",
-    "windows-in-time": "https://github.com/lukelove/windows-in-time.git"
+    "webpack-dev-server": "^3.11.2"
   }
 }
