@@ -5,6 +5,7 @@ var Countdown = require('countdown.js');
 import Cookies from "js-cookie";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
+import { googleCalendarEventUrl } from 'google-calendar-url';
 
 import { WindowsInTime } from 'windows-in-time';
 export default class extends Controller {
@@ -95,11 +96,23 @@ export default class extends Controller {
       html.querySelector('.start').innerHTML = window.interval.start.toFormat('t')
       html.querySelector('.end').innerHTML = window.interval.end.toFormat('t')
       html.querySelector('.length').innerHTML = window.interval.length('minutes').toFixed() + 'm'
+      html.querySelector('.gcal a').setAttribute('href', this.googleCalendarURL(window)) 
 
       return html.outerHTML
 
     }).join('')
 
+  }
+
+  googleCalendarURL(window){
+    var dateFormat = 'yyyyMMdd'
+    var timeFormat = 'HHmmss'
+    return googleCalendarEventUrl({
+      start: [window.interval.start.toFormat(dateFormat), 'T', window.interval.start.toFormat(timeFormat)].join(''),
+      end: [window.interval.end.toFormat(dateFormat), 'T', window.interval.end.toFormat(timeFormat)].join(''),
+      title: [window.element.replace(/^\w/, (c) => c.toUpperCase()), window.planet.replace(/^\w/, (c) => c.toUpperCase())].join(' :: ') + ' (Window In Time)'
+    });
+    
   }
 
   addTippy() {
