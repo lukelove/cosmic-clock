@@ -49,7 +49,7 @@ export default class extends Controller {
         tabIndex = 'tabindex="0"'
       }
       
-      h+= '<div class="' + klass + ' border-b-2 border-indigo-400 p-4 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + index + '">'
+      h+= '<div class="' + klass + ' border-b border-gray-darkest p-4 grid grid-cols-2 gap-4" '+ tabIndex + ' id="sun-i-' + index + '">'
         h+= '<div class="mr-3">'+ sun_interval.time_string + '</div>'
         h+= '<div class="text-left">'+ this.elementsToHTML(sun_interval.elements) + '</div>'
       h+= "</div>"
@@ -60,10 +60,10 @@ export default class extends Controller {
     this.timeNowStrTarget.innerHTML = html
 
     // Element Blocks beside the TItle
-    // if( this.presentInterval ){
-    //   this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
-    //   this.focus()
-    // }
+    if( this.presentInterval ){
+      // this.elementBlocksTarget.innerHTML = this.elementsToHTML(this.presentInterval.elements)
+      this.focus()
+    }
   }
 
   focus() {

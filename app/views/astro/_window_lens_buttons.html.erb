@@ -1,23 +1,27 @@
 <section class="">
   <div class="buttons flex flex-col items-center justify-center">
-    <div class="my-2">
-      <button data-actor="moon" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded moon"></button>
-      <button data-actor="mars" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded mars"></button>
-      <button data-actor="mercury" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded mercury"></button>
-      <button data-actor="jupiter" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded jupiter"></button>
-      <button data-actor="venus" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded venus"></button>
-      <button data-actor="saturn" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded saturn"></button>
-      <button data-actor="sun" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded sun"></button>
-    </div>
-    <div class="my-2">
-      <button data-actor="air" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded air"></button>
-      <button data-actor="fire" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded fire"></button>
-      <button data-actor="earth" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded earth"></button>
-      <button data-actor="water" data-action="click->location#showWindow" class="bg-yellow-200 p-6 half-sized-element rounded water"></button>
-    </div>
+    <% if @app == 'windows' %>
+      <div class="my-2">
+        <button data-actor="moon" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded moon"></button>
+        <button data-actor="mars" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded mars"></button>
+        <button data-actor="mercury" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded mercury"></button>
+        <button data-actor="jupiter" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded jupiter"></button>
+        <button data-actor="venus" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded venus"></button>
+        <button data-actor="saturn" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded saturn"></button>
+        <button data-actor="sun" data-action="click->location#showWindow" class="bg-indigo-400 mr-2 p-6 half-sized-element rounded sun"></button>
+      </div>
+      <div class="my-2">
+        <button data-actor="air" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded air"></button>
+        <button data-actor="fire" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded fire"></button>
+        <button data-actor="earth" data-action="click->location#showWindow" class="bg-yellow-200 mr-2 p-6 half-sized-element rounded earth"></button>
+        <button data-actor="water" data-action="click->location#showWindow" class="bg-yellow-200 p-6 half-sized-element rounded water"></button>
+      </div>
+    <% end %>
     <%= render(partial: 'day') %>
-    <div class="my-2">
-      <button data-actor="golden" data-action="click->location#showWindow" data-location-target="windowRulerBtn" class="bg-pink-300 mr-2 p-6 half-sized-element rounded"></button>
-    </div>
+    <% if @app == 'windows' %>
+      <div class="my-2">
+        <button data-actor="golden" data-action="click->location#showWindow" data-location-target="windowRulerBtn" class="bg-pink-300 mr-2 p-6 half-sized-element rounded"></button>
+      </div>
+    <% end %>
   </div>
 </section>

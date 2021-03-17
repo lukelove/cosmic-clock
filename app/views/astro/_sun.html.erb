@@ -1,15 +1,32 @@
-<div data-controller="sun" class="p-3 mr-10 relative" data-app-loaded-value="0">
-  <div class="flex items-center bg-yellow-100 bg-left rounded-3xl flex-col justify-center pb-10 pt-2 text-center w-full" >
+<div data-controller="sun" data-app-loaded-value="0" class="p-3 relative flex flex-row mt-5">
 
-    <%= render(partial: 'timer', locals: {controller: 'sun'}) %>
-    <div class="w-full">
-      <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Tattvas</div>
-      <div data-sun-target="elementBlocks" class="pt-4"></div>
-      <hr class="m-2" />
-    </div>
-    <div class="w-full lg:w-2/5 font-medium overflow-y-auto h-60" data-sun-target="timeNowStr">
+  <div class="border-r border-gray-darkest hidden md:block md:w-full p-5 ">
+    <p class="p-5 mt-5 bg-purple-200 rounded">
+      "There is no luck or misfortune, success or failure; everything is a vibration of the ether."
+    </p>
+
+
+    <p class="p-5 mt-5 bg-yellow-200 rounded">
+      "The study of the vibrations of the ether (Tattvas) is indispensable. Remember that business, love, health. etc. are controlled by cosmic vibrations."
+    </p>
+
+    <p class="p-5 mt-5 rounded text-right text-blue-500">
+      <a href="https://glorian.org/books/introduction-to-gnosis/lesson-three">Learn more @ Introduction to Gnosis</a>
+    </p>
+
+
+  </div>
+
+
+
+  <div class="justify-center text-center w-full">
+
+    <%#= render(partial: 'timer', locals: {controller: 'sun'}) %>
+    <div class="w-full font-medium overflow-y-auto h-96" data-sun-target="timeNowStr">
       Wherever you go, no matter what the weather, always bring your own sunshine
     </div>
+
+
     <div class="text-xs w-full pt-10 hidden">
       <div class="grid grid-cols-3 gap-1">
         <span>Sunrise: </span>
@@ -21,11 +38,14 @@
       </div>
     </div>
 
-    <button
-      data-location-target="btn"
-      data-action="click->location#getLocation"
-      class="bg-blue-500 rounded shadow-md font-light pb-2 pl-4 pr-4 pt-2 text-center text-white w-40">
-      Get My Location
-    </button>
   </div>
+
+  
 </div>
+
+<button
+  data-location-target="btn"
+  data-action="click->location#getLocation"
+  class="bg-blue-500 rounded shadow-md font-light pb-2 pl-4 pr-4 pt-2 text-center text-white w-40">
+  Get My Location
+</button>

@@ -1,0 +1,35 @@
+  <div data-controller="glide" data-glide-class="glide-descriptions" class="flex flex-col mx-5 space-y-4">
+    <h2 class="flex flex-col items-center justify-center pt-5 text-lg font-bold">Descriptions</h2>
+    <div class="clear-both"></div>
+    <nav data-glide-target="nav" class="flex flex-row pl-4 pr-6 py-2 glide-nav">
+      <button data-actor="0" data-action="click->glide#go" class="text-gray-600 w-1/2 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+        Elements
+      </button>
+      <button data-actor="1" data-action="click->glide#go" class="text-gray-600 w-1/2 text-xs py-4 px-6 block hover:text-blue-500 focus:outline-none">
+        Planets
+      </button>
+    </nav>
+    <div class="glide-descriptions pl-4 pr-6 py-2">
+      <div class="glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+          <li class="glide__slide">
+            <%= render partial: "descriptions", locals: {element: 'spirit', description: "Pros: Meditation, Prayer, Mental Work, Physical Stillness <br /> Cons: Business, Love <br /> Warnings: Everything that begins with Akash will fail"} %>
+            <%= render partial: "descriptions", locals: {element: 'air', description: "Pros: Mental Work, Simple and fast businesses <br /> Cons: Marriage, Businesses that are complex and of long duration <br /> Warnings: Everything that is velocity and motion."} %>
+            <%= render partial: "descriptions", locals: {element: 'fire', description: "Pros: Work intensely <br /> Cons: Argue, Marriage <br /> Warnings: Be aware, accidents happen here"} %>
+            <%= render partial: "descriptions", locals: {element: 'earth', description: "Pros: Party, Lecture, Appointments, Business, Eat and drink, Marriage.  This is the Tattva of success in life, love, charity, benevolence."} %>
+            <%= render partial: "descriptions", locals: {element: 'water', description: "Pros: Business, Purchase Merchandise, Lottery, Concentrating and attracting, Journeys by Water <br /> Warnings: Emotions may be stronger during this Tattva."} %>
+          </li>
+          <li class="glide__slide">
+            <%= render partial: "descriptions", locals: {element: 'moon', description: "Emotional outbursts, emotional vulnerability, emotional conversation, close relatives, the family home, his home, spouse, intuitive knowledge, cleaning, dairy products, white"} %>
+            <%= render partial: "descriptions", locals: {element: 'mars', description: "Impulsivity, willpower, men's conversations, men's time, spontaneous action, thrills, masculine approach, fast action, sports, spicy foods, hot foods, red"} %>
+            <%= render partial: "descriptions", locals: {element: 'mercury', description: "Superficial attitude, the desire of a new, easy communication, easy promises, talks about the trips, a successful trade, instability, ease in everything, salads, light food, mixed color"} %>
+            <%= render partial: "descriptions", locals: {element: 'jupiter', description: "Generosity, strengthening personal qualities, business meetings, talks on the theme of work, social activities, work in general, deeds for the benefit of others, double damage from the habits, blue"} %>
+            <%= render partial: "descriptions", locals: {element: 'venus', description: "Hypersensitivity, the need for beauty, women's time, a declaration of love, beauty in everything, do everything beautiful, beautiful gift, favorite foods, sweets, milk color"} %>
+            <%= render partial: "descriptions", locals: {element: 'saturn', description: "Self-restraint, increased restraint, reticence, short conversation, clarifying relationships, older people, cheap shopping, objective planning, starvation, minimal food intake, dark colors, dull colors"} %>
+            <%= render partial: "descriptions", locals: {element: 'sun', description: "Manifestation of maximalism, a royal behaviour, high-profile people, intangible pleasures, creative time, unconventional approach, all unusual, new dishes, orange, the color of gold"} %>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>

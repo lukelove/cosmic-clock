@@ -10,14 +10,15 @@ import { WindowsInTime } from 'windows-in-time';
 export default class extends Controller {
 
   static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn" ]
-  static values = { lat: Number, lng: Number }
+  static values = { lat: Number, lng: Number, app: String }
 
   initialize() {
 
     this.date = DateTime.now()
     
     if( Cookies.get('lat') != undefined && Cookies.get('lng') != undefined ){
-      this.btnTarget.classList.add('hidden')
+      // TODO: add this back! This is the "Get My Location" btn
+      // this.btnTarget.classList.add('hidden')
       this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
     }else{
       this.getLocation( this.date )
@@ -48,9 +49,20 @@ export default class extends Controller {
     let windows_in_time = new WindowsInTime(Cookies.get('lat'), Cookies.get('lng'))
     windows_in_time.earth.setTimes(this.date).then(() => {
       windows_in_time.magic()
-      this.addWindows(windows_in_time.windows.intervals, windows_in_time.earth)
-      this.getControllerByIdentifier('sun').init(windows_in_time.earth, windows_in_time.sun)
-      this.getControllerByIdentifier('moon').init(windows_in_time.earth, windows_in_time.moon, windows_in_time.earth.daily_ruler)
+
+      switch (this.appValue) {
+        case "windows":
+          this.addWindows(windows_in_time.windows.intervals, windows_in_time.earth)
+          break
+        case "sun":
+          this.getControllerByIdentifier('sun').init(windows_in_time.earth, windows_in_time.sun)
+          break
+        case "moon":
+          this.getControllerByIdentifier('moon').init(windows_in_time.earth, windows_in_time.moon, windows_in_time.earth.daily_ruler)
+          break
+      }
+      
+      
 
       this.dateTarget.innerHTML = windows_in_time.earth.sunrise.toFormat("ccc LLL dd")
       this.dateTarget.setAttribute('data-date', windows_in_time.earth.sunrise.toISODate() )
