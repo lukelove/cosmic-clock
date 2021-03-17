@@ -2,9 +2,10 @@ import { Controller } from 'stimulus';
 var SunCalc = require('suncalc');
 import { DateTime } from "luxon";
 import Cookies from "js-cookie";
+import { googleCalendarEventUrl } from 'google-calendar-url';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
-import { googleCalendarEventUrl } from 'google-calendar-url';
+
 
 import { WindowsInTime } from 'windows-in-time';
 export default class extends Controller {
@@ -128,6 +129,9 @@ export default class extends Controller {
 
   addTippy() {
     
+    // _.delay((el) => { this.getControllerByIdentifier('tippy').tip() }, 200, this)
+    
+
     // cleanup tippys
     if (this.tippys == undefined) this.tippys = []
     _.each(this.tippys, (t) => { t.destroy() })
@@ -156,11 +160,11 @@ export default class extends Controller {
 
   }
 
-  elementToPlanetsHTML(element){
-    return _.map(this.elementToPlanets(element), (e) => {
-      return elementToHTML(e)
-    }).join('')
-  }
+  // elementToPlanetsHTML(element){
+  //   return _.map(this.elementToPlanets(element), (e) => {
+  //     return elementToHTML(e)
+  //   }).join('')
+  // }
 
   elementToHTML(e, otherClasses) {
     return ['<div class="', e, ' ', otherClasses, ' mr-2"></div>'].join('')

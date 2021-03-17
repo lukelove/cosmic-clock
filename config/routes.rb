@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   root to: "astro#index"
   get '/moon', to: "astro#moon"
   get '/sun', to: "astro#sun"
+  get '/planets', to: "astro#planets"
+  get '/elements', to: "astro#elements"
 
 end
