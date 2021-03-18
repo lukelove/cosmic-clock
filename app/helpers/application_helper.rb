@@ -1,9 +1,10 @@
 module ApplicationHelper
 
-  def app_title
-    return 'Overlapping Windows In Time' if @app == 'windows'
-    return 'Sun Emanations' if @app == 'sun'
-    return 'Planetary Hours' if @app == 'moon'
+  def app_title(app = nil)
+    app ||=  @app
+    return 'Overlaps' if app == 'windows'
+    return 'Sun Emanations' if app == 'sun'
+    return 'Planetary Hours' if app == 'moon'
   end
 
 end
