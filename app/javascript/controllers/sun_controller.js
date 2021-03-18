@@ -46,12 +46,19 @@ export default class extends Controller {
       if( this.presentInterval == sun_interval ){
         this.presentIndex = index
         html.setAttribute('tabindex', '0')
-        html.classList.add( 'bg-indigo-400' )
+        // html.classList.add( 'bg-indigo-400' )
       }
       
       html.classList.remove('sunTemplate')
       html.classList.remove('hidden')
+      html.classList.add('interval')
+      var w = html.querySelector('.widget')
       html.setAttribute('id', `sun-i-${index}`)
+
+      if( this.earth.isToday && !(sun_interval.interval.contains( DateTime.now() ) || sun_interval.interval.isAfter( DateTime.now() )) ){
+        w.closest('.interval').classList.add('hidden')
+      }
+
 
       html.querySelector('.sun-element').classList.add( sun_interval.element )
       _.each(sun_interval.planets, (p, i) => {

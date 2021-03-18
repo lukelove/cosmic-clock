@@ -67,14 +67,18 @@ export default class extends Controller {
       if( this.presentInterval == moon_interval ){
         this.presentIndex = index
         html.setAttribute('tabindex', '0')
-        html.classList.add( 'bg-indigo-400' )
+        // html.classList.add( 'bg-indigo-400' )
       }
-
 
       html.classList.remove('moonTemplate')
       html.classList.remove('hidden')
+      html.classList.add('interval')
       html.setAttribute('id', `moon-i-${index}`)
+      var w = html.querySelector('.widget')
 
+      if( this.earth.isToday && !(moon_interval.interval.contains( DateTime.now() ) || moon_interval.interval.isAfter( DateTime.now() )) ){
+        w.closest('.interval').classList.add('hidden')
+      }
 
       html.querySelector('.sun-element').classList.add( moon_interval.element )
       html.querySelector('.moon-planet').classList.add( moon_interval.planet )
