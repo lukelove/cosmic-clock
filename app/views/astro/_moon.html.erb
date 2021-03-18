@@ -1,15 +1,26 @@
-<div data-controller="moon" class="p-3 mr-10 relative" data-app-loaded-value="0">
-  <div class="flex items-center bg-indigo-400 bg-left rounded-3xl flex-col justify-center pb-10 pt-2 text-center w-full" >
+<%= render(partial: 'moon_template') %>
 
-    <%= render(partial: 'timer', locals: {controller: 'moon'}) %>
-    <div class="w-full">
-      <div class="inline-block font-sans text-3xl font-semibold tracking-tight">Planetary Hours</div>
-      <div data-moon-target="elementBlocks" class="pt-4"></div>
-      <hr class="m-2" />
-    </div>
-    <div class="w-full lg:w-2/5 font-medium overflow-y-auto h-60" data-moon-target="timeNowStr">
+<div data-controller="moon" data-app-loaded-value="0" class="p-3 relative flex flex-row mt-5">
+
+  <div class="border-r border-gray-darkest hidden md:block md:w-full p-5 ">
+    <p class="p-5 mt-5 bg-purple-200 rounded">
+     "Solomon, the Son of David, King of Israel, hath said that the beginning of our Key is to fear God, to adore Him, to honour Him with contrition of heart, to invoke him in all matters which we wish to undertake, and to operate with very great devotion, for thus God will lead us in the right way. 
+     <br />
+     <br />
+     When, therefore, thou shalt wish to acquire the knowledge of Magical Arts and Sciences, it is necessary to have prepared the order of hours and days, and of the position of the moon, without the operation which thou canst effect nothing ; but if thou observest them with diligence thou mayest easily and thoroughly arrive at the effect and end which thou desirest to attain."
+    </p>
+  </div>
+
+
+
+  <div class="justify-center text-center w-full">
+
+    <%#= render(partial: 'timer', locals: {controller: 'moon'}) %>
+    <div class="w-full font-medium overflow-y-auto h-96" data-moon-target="timeNowStr">
       Always go with your passion, never ask if they are real or not
     </div>
+
+
     <div class="text-xs w-full pt-10 hidden">
       <div class="grid grid-cols-4 gap-1">
         <span>Day Length: </span>
@@ -28,4 +39,6 @@
     <div data-moon-target="rulingPlanet" class="absolute top-7 right-7"></div>
 
   </div>
+
+  
 </div>
