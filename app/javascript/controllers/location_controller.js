@@ -10,7 +10,7 @@ import 'tippy.js/dist/tippy.css'; // optional for styling
 import { WindowsInTime } from 'windows-in-time';
 export default class extends Controller {
 
-  static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn" ]
+  static targets = [ "btn", "sunrise", "sunset", "date", "windowRulerBtn", "apps", "loader" ]
   static values = { lat: Number, lng: Number, app: String }
 
   initialize() {
@@ -18,10 +18,10 @@ export default class extends Controller {
     this.date = DateTime.now()
     
     if( Cookies.get('lat') != undefined && Cookies.get('lng') != undefined ){
-      // TODO: add this back! This is the "Get My Location" btn
-      // this.btnTarget.classList.add('hidden')
       this.getWindowsInTime( this.date, Cookies.get('lat'), Cookies.get('lng') )
+      this.appsTarget.classList.remove('hidden')
     }else{
+      this.loaderTarget.classList.remove('hidden')
       this.getLocation( this.date )
     }
 
@@ -154,6 +154,8 @@ export default class extends Controller {
       Cookies.set('lat', this.latValue)
       Cookies.set('lng', this.lngValue)
       this.getWindowsInTime( date )
+      this.appsTarget.classList.remove('hidden')
+      this.loaderTarget.classList.add('hidden')
     })
 
   }
