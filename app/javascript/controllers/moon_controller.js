@@ -1,5 +1,6 @@
 import { Controller } from 'stimulus'; 
 import { DateTime, Duration, Interval } from "luxon";
+import { googleCalendarEventUrl } from 'google-calendar-url';
 // var Countdown = require('countdown.js');
 
 export default class extends Controller {
@@ -54,42 +55,53 @@ export default class extends Controller {
 
     var translator = this.getControllerByIdentifier('location')
 
-    this.rulingPlanetTarget.innerHTML = translator.elementToHTML( this.daily_ruler )
+    var rulingPlanet = document.querySelector('.rulingPlanet')
 
-    // this.presentInterval = this.interval()
+    rulingPlanet.innerHTML = translator.elementToHTML( this.daily_ruler )
+    rulingPlanet.classList.remove('hidden')
+
     var html = _.map(this.moon.intervals, (moon_interval, index) => {
 
-      var klass = '', tabIndex = '', h = ''
+      var html = document.querySelector('.moonTemplate').cloneNode(true)
+
       if( this.presentInterval == moon_interval ){
         this.presentIndex = index
-        klass = 'bg-yellow-200'
-        tabIndex = 'tabindex="0"'
+        html.setAttribute('tabindex', '0')
+        // html.classList.add( 'bg-indigo-400' )
       }
-      
-      var h = '<div class="' + klass + 'border-b-2 border-yellow-200 p-4 grid grid-cols-2 gap-4" '+ tabIndex + ' id="moon-i-' + index + '">'
-      h+= '<div class="w-full inline-flex">'
-        h+= '<div class="inline-block w-16 mr-4">'+ (index + 1) + ' h</div>'
-        h+= '<div class="inline-block w-full">'+ moon_interval.time_string + '</div>'
-      h+= '</div>'
-      h+= '<div class="w-full">'+ this.elementsToHTML(moon_interval.elements) + '</div>'
-      h+= "</div>"
-      
-      return h
+
+      html.classList.remove('moonTemplate')
+      html.classList.remove('hidden')
+      html.classList.add('interval')
+      html.setAttribute('id', `moon-i-${index}`)
+      var w = html.querySelector('.widget')
+
+      if( this.earth.isToday && !(moon_interval.interval.contains( DateTime.now() ) || moon_interval.interval.isAfter( DateTime.now() )) ){
+        w.closest('.interval').classList.add('hidden')
+      }
+
+      html.querySelector('.sun-element').classList.add( moon_interval.element )
+      html.querySelector('.moon-planet').classList.add( moon_interval.planet )
+
+      html.querySelector('.start').innerHTML = moon_interval.interval.start.toFormat('t')
+      html.querySelector('.end').innerHTML = moon_interval.interval.end.toFormat('t')
+      html.querySelector('.gcal a').setAttribute('href', this.googleCalendarURL(moon_interval)) 
+
+      return html.outerHTML
     }).join('')
 
     this.timeNowStrTarget.innerHTML = html
 
-    // if( this.presentInterval ){
+    if( this.presentInterval ){
     //   // Element Blocks beside the TItle
     //   this.elementBlocksTarget.innerHTML = this.elementsToHTML( this.presentInterval )
-    //   this.focus()
-    // }
+      this.focus()
+    }
         
   }
 
   focus() {
     var activeEl = document.querySelector('#moon-i-' + this.presentIndex)
-
     _.delay((e) => {
       e.focus()
       _.delay((el) => { el.blur() },100, e)
@@ -150,5 +162,18 @@ export default class extends Controller {
       return controller.context.identifier === identifier;
     });
   }
+
+  googleCalendarURL(moon_interval){
+    var dateFormat = 'yyyyMMdd'
+    var timeFormat = 'HHmmss'
+    var elName = moon_interval.planet.replace(/^\w/, (c) => c.toUpperCase())
+    return googleCalendarEventUrl({
+      start: [moon_interval.interval.start.toFormat(dateFormat), 'T', moon_interval.interval.start.toFormat(timeFormat)].join(''),
+      end: [moon_interval.interval.end.toFormat(dateFormat), 'T', moon_interval.interval.end.toFormat(timeFormat)].join(''),
+      title: `${elName} Hour`
+    });
+    
+  }
+
   
 }

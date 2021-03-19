@@ -1,0 +1,14 @@
+<div data-controller="tippy">
+
+  <h1 class="flex flex-col items-center justify-center py-5 text-2xl font-bold">Element Descriptions</h1>
+
+  <a href="/planets" class="bg-indigo-400 mr-2 p-2 half-sized-element rounded text-xs inline-block my-10"><i class="fas fa-info-circle"></i> Planets</a>
+
+  <%= render partial: "descriptions", locals: {element: 'spirit', description: "Pros: Meditation, Prayer, Mental Work, Physical Stillness <br /> Cons: Business, Love <br /> Warnings: Everything that begins with Akash will fail"} %>
+  <%= render partial: "descriptions", locals: {element: 'air', description: "Pros: Mental Work, Simple and fast businesses <br /> Cons: Marriage, Businesses that are complex and of long duration <br /> Warnings: Everything that is velocity and motion."} %>
+  <%= render partial: "descriptions", locals: {element: 'fire', description: "Pros: Work intensely <br /> Cons: Argue, Marriage <br /> Warnings: Be aware, accidents happen here"} %>
+  <%= render partial: "descriptions", locals: {element: 'earth', description: "Pros: Party, Lecture, Appointments, Business, Eat and drink, Marriage.  This is the Tattva of success in life, love, charity, benevolence."} %>
+  <%= render partial: "descriptions", locals: {element: 'water', description: "Pros: Business, Purchase Merchandise, Lottery, Concentrating and attracting, Journeys by Water <br /> Warnings: Emotions may be stronger during this Tattva."} %>
+
+
+</div>
