@@ -20,3 +20,5 @@ ActiveStorage.start()
 
 // TailwindCSS
 import "stylesheets/application"
+
+import "@fortawesome/fontawesome-free/css/all"
